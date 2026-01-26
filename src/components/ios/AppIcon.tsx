@@ -52,8 +52,9 @@ export function AppIcon({
             : {}
         }
         className={cn(
-          "relative h-[60px] w-[60px] overflow-hidden rounded-[16px] transition-all duration-200",
-          "liquid-icon", // iOS 26 Liquid Glass icon style
+          "relative flex items-center justify-center h-[60px] w-[60px] overflow-hidden rounded-[14px] transition-all duration-200",
+          "bg-white/20 backdrop-blur-xl border border-white/30",
+          "shadow-[0_4px_16px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.3)]",
           "active:scale-95"
         )}
       >
@@ -61,16 +62,21 @@ export function AppIcon({
           <img 
             src={iconUrl} 
             alt={title} 
-            className="h-full w-full object-cover"
-            style={{ 
-              mixBlendMode: 'normal',
+            className="h-10 w-10 object-contain"
+            onError={(e) => {
+              // Fallback to letter if image fails
+              e.currentTarget.style.display = 'none'
+              e.currentTarget.nextElementSibling?.classList.remove('hidden')
             }}
           />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-white/30 to-white/10 font-semibold text-white text-2xl">
-            {title.charAt(0).toUpperCase()}
-          </div>
-        )}
+        ) : null}
+        {/* Fallback letter - shown if no icon or icon fails to load */}
+        <div className={cn(
+          "flex h-full w-full items-center justify-center font-bold text-white text-2xl",
+          iconUrl ? "hidden" : ""
+        )}>
+          {title.charAt(0).toUpperCase()}
+        </div>
 
         {/* Remove Button in Jiggle Mode */}
         {isJiggling && onRemove && (
