@@ -121,7 +121,7 @@ export function PublicProfile({ username, serverProfile, serverLinks }: PublicPr
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
             >
-            <div className="grid grid-cols-4 gap-x-5 gap-y-6"> {/* Tuned spacing */}
+            <div className="grid grid-cols-4 gap-x-4 gap-y-4"> {/* Tighter spacing */}
                 <SortableContext items={gridLinks} strategy={rectSortingStrategy}>
                 {gridLinks.map((link) => (
                     <SortableAppIcon
