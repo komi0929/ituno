@@ -5,7 +5,7 @@ import { AppIcon, DockIcon } from "@/components/ios/AppIcon"
 import { Dock } from "@/components/ios/Dock"
 import { ProfileWidget } from "@/components/ios/ProfileWidget"
 import { SortableAppIcon } from "@/components/ios/SortableAppIcon"
-import { DYNAMIC_ENVIRONMENT } from "@/lib/ios-physics"
+import { WALLPAPER_STYLE } from "@/lib/ios-physics"
 import { Database } from "@/lib/types/schema"
 import {
     closestCenter,
@@ -78,45 +78,48 @@ export function PublicProfile({ username, serverProfile, serverLinks }: PublicPr
   if (!isMounted) return null
 
   return (
-    // RESPONSIVE CONTAINER: Full bleed on Mobile, Device Frame on Desktop
-    <div className="flex min-h-screen w-full items-center justify-center bg-[#050505] font-sans selection:bg-cyan-500/30">
+    <div className="flex min-h-[100dvh] w-full items-center justify-center bg-[#050505] font-sans">
       
-      {/* PHONE CHASSIS (Visible only on lg screens) */}
-      <div className="relative flex h-[100dvh] w-full flex-col overflow-hidden bg-black lg:h-[880px] lg:w-[420px] lg:rounded-[60px] lg:border-[14px] lg:border-[#1a1a1a] lg:shadow-2xl lg:ring-2 lg:ring-[#333]">
+      {/* DEVICE FRAME (Desktop Only) */}
+      <div className="
+        relative flex flex-col overflow-hidden bg-black
+        w-full h-[100dvh]
+        md:w-[400px] md:h-[860px] md:rounded-[55px] md:border-[12px] md:border-[#1c1c1c] md:shadow-2xl md:ring-4 md:ring-[#333]
+      ">
         
-        {/* DYNAMIC ENVIRONMENT (The Light Source) */}
+        {/* WALLPAPER: High Contrast Mesh for Refraction */}
         <div 
           className="absolute inset-0 z-0"
-          style={DYNAMIC_ENVIRONMENT}
+          style={WALLPAPER_STYLE}
           onClick={handleWallpaperClick}
         />
 
-        {/* Status Bar */}
-        <div className="relative z-50 flex h-14 w-full items-end justify-between px-7 pb-2 text-white/90">
-          <span className="text-[15px] font-semibold tracking-wide">9:41</span>
+        {/* TOP BAR */}
+        <div className="relative z-50 flex h-14 w-full shrink-0 items-end justify-between px-6 pb-2 text-white/90">
+          <span className="text-[15px] font-semibold">9:41</span>
           <div className="flex items-center gap-1.5">
-            <Signal size={16} strokeWidth={2.5} />
-            <Wifi size={16} strokeWidth={2.5} />
-            <Battery size={22} strokeWidth={2.5} />
+            <Signal size={16} />
+            <Wifi size={16} />
+            <Battery size={22} />
           </div>
         </div>
 
         {/* Dynamic Island */}
-        <div className="absolute left-1/2 top-3 z-50 h-[34px] w-[120px] -translate-x-1/2 rounded-full bg-black shadow-lg" />
+        <div className="absolute left-1/2 top-3 z-50 h-[34px] w-[120px] -translate-x-1/2 rounded-full bg-black pointer-events-none" />
 
-        <main className="relative z-10 flex flex-1 flex-col px-6 pt-6 overflow-y-auto">
+        <main className="relative z-10 flex flex-1 flex-col px-5 pt-4 overflow-y-auto">
           
-          {/* PROFILE WIDGET (The "Water Bubble") */}
+          {/* WIDGET: NO BORDER, JUST VOLUME */}
           <ProfileWidget profile={serverProfile} />
 
-          {/* APP GRID */}
+          {/* ICONS */}
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >
-            <div className="grid grid-cols-4 gap-y-8">
+            <div className="grid grid-cols-4 gap-y-6">
               <SortableContext items={gridLinks} strategy={rectSortingStrategy}>
                 {gridLinks.map((link) => (
                   <SortableAppIcon
@@ -149,7 +152,7 @@ export function PublicProfile({ username, serverProfile, serverLinks }: PublicPr
 
         </main>
 
-        {/* THE DOCK (The Floating Meniscus) */}
+        {/* DOCK: NO BORDER */}
         {dockLinks.length > 0 && (
           <Dock>
             {dockLinks.map((link) => (
@@ -165,9 +168,9 @@ export function PublicProfile({ username, serverProfile, serverLinks }: PublicPr
             ))}
           </Dock>
         )}
-
-        {/* Home Indicator */}
-        <div className="absolute bottom-2 left-1/2 h-1.5 w-36 -translate-x-1/2 rounded-full bg-white/60 backdrop-blur-md z-50" />
+        
+        {/* HOME INDICATOR */}
+        <div className="absolute bottom-2 left-1/2 h-1 w-32 -translate-x-1/2 rounded-full bg-white/40 backdrop-blur-md pointer-events-none z-50" />
       </div>
     </div>
   )

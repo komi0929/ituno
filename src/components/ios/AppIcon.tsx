@@ -2,7 +2,7 @@
 "use client"
 
 import { useLongPress } from "@/lib/hooks/use-long-press"
-import { DOCK_ICON_PHYSICS, ICON_PHYSICS, SQUIRCLE_PATH } from "@/lib/ios-physics"
+import { ICON_LIFT, SQUIRCLE } from "@/lib/ios-physics"
 import { X } from "lucide-react"
 
 interface AppIconProps {
@@ -17,14 +17,12 @@ interface AppIconProps {
   showLabel?: boolean
 }
 
-/* --- INTERACTION PHYSICS (Surface Tension) --- */
-/* The article describes "pulling" and "snapping" back like water. */
-
+/* --- INTERACTION --- */
 export function AppIcon({
   id,
   title,
   iconUrl,
-  color = "#181717",
+  color = "#171515",
   isJiggling = false,
   onClick,
   onLongPress,
@@ -37,17 +35,18 @@ export function AppIcon({
   )
 
   return (
-    <div className="group flex flex-col items-center gap-2 cursor-pointer">
+    <div className="group flex flex-col items-center gap-1.5 cursor-pointer">
       <div 
         {...longPressProps}
         className="relative transition-transform duration-300 ease-[cubic-bezier(0.25,1.4,0.5,1)] group-active:scale-90"
       >
         <div 
-          className="flex h-[62px] w-[62px] items-center justify-center shadow-lg overflow-hidden"
+          className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden"
           style={{ 
             background: color, 
-            clipPath: SQUIRCLE_PATH,
-            ...ICON_PHYSICS
+            clipPath: SQUIRCLE,
+            // REMOVED BORDERS. Added pure lift shadow.
+            ...ICON_LIFT
           }}
         >
           {iconUrl ? (
@@ -81,7 +80,7 @@ export function AppIcon({
         )}
       </div>
       {showLabel && (
-        <span className="text-[11px] font-medium text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] tracking-tight">
+        <span className="text-[11px] font-medium text-white drop-shadow-md tracking-tight">
           {title}
         </span>
       )}
@@ -104,7 +103,7 @@ export function DockIcon({
   id,
   title,
   iconUrl,
-  color = "#181717",
+  color = "#171515",
   onClick,
   onLongPress,
   isJiggling = false,
@@ -117,15 +116,11 @@ export function DockIcon({
   return (
     <div 
       {...longPressProps}
-      className="relative transition-transform duration-300 ease-[cubic-bezier(0.25,1.5,0.5,1)] active:scale-75 hover:-translate-y-1 cursor-pointer"
+      className="relative transition-transform duration-300 ease-[cubic-bezier(0.25,1.4,0.5,1)] active:scale-75 hover:-translate-y-2 cursor-pointer"
     >
       <div 
-        className="flex h-[60px] w-[60px] items-center justify-center shadow-lg overflow-hidden"
-        style={{ 
-          background: color, 
-          clipPath: SQUIRCLE_PATH,
-          ...DOCK_ICON_PHYSICS
-        }}
+        className="flex h-[58px] w-[58px] items-center justify-center shadow-lg overflow-hidden"
+        style={{ background: color, clipPath: SQUIRCLE }}
       >
         {iconUrl ? (
           <img 
