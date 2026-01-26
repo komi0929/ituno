@@ -1,9 +1,9 @@
 
 "use client"
 
-import { useLongPress } from "@/lib/hooks/use-long-press"
-import { cn } from "@/lib/utils"
-import { motion } from "framer-motion"
+import { useLongPress } from "@/lib/hooks/use-long-press";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 import { X } from "lucide-react"; // Import X icon
 
 interface AppIconProps {
@@ -25,10 +25,26 @@ export function AppIcon({
   onLongPress,
   onRemove,
 }: AppIconProps) {
-  const longPressProps = useLongPress({
-    onLongPress: onLongPress || (() => {}),
-    onClick: onClick || (() => {}),
-  })
+  // Fix: useLongPress expects (callback, options?) signature
+  // The first argument is the callback for "Long Press" usually, 
+  // but looking at hook implementation it takes `callback` which executes on timeout.
+  // And options has onStart, onFinish, onCancel. 
+  
+  // However, the hook implementation I saw:
+  // export function useLongPress(callback: () => void, { threshold = 500, onStart, onFinish, onCancel }: LongPressOptions = {})
+  
+  // So we should pass onLongPress as the first arg.
+  // And we need to handle "click" (short press) via onCancel or manually.
+  
+  // Actually, the hook's `onCancel` is called when it's NOT a long press, i.e., a click.
+  // Let's verify standard useLongPress usage or adapt.
+  
+  const longPressProps = useLongPress(
+    onLongPress || (() => {}), // callback (triggered after threshold)
+    {
+      onCancel: onClick, // triggered if released BEFORE threshold (i.e. click)
+    }
+  )
 
   return (
     <div className="relative flex flex-col items-center gap-1.5">
