@@ -25,8 +25,8 @@ interface AppIconProps {
 /**
  * Standard iOS App Icon
  * - 60x60px with 13px border-radius (squircle)
+ * - ALL icons are MASKED to squircle shape (this is iOS standard)
  * - Label centered below (11px gray text)
- * - No Liquid Glass effects - just accurate iOS reproduction
  */
 export function AppIcon({
   id,
@@ -52,22 +52,27 @@ export function AppIcon({
           animation: isJiggling ? 'jiggle 0.15s ease-in-out infinite alternate' : 'none'
         }}
       >
-        {/* Icon Container - 60x60, 13px radius */}
+        {/* Icon Container - 60x60, 13px radius, CLIPS ALL CONTENT */}
         <div 
-          className="relative overflow-hidden"
+          className="relative flex items-center justify-center bg-white"
           style={{
             width: ICON_SIZE,
             height: ICON_SIZE,
             borderRadius: ICON_RADIUS,
             boxShadow: '0 1px 3px rgba(0,0,0,0.12)',
+            overflow: 'hidden', // CRITICAL: clips image to squircle
           }}
         >
           {iconUrl ? (
             <img 
               src={iconUrl} 
               alt={title} 
-              className="h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover"
               draggable={false}
+              style={{
+                // Ensure image fills the container and gets clipped
+                objectFit: 'cover',
+              }}
               onError={(e) => {
                 e.currentTarget.style.display = 'none'
                 const fallback = e.currentTarget.nextElementSibling as HTMLElement
@@ -77,7 +82,7 @@ export function AppIcon({
           ) : null}
           {/* Fallback - gradient with initial letter */}
           <div 
-            className="h-full w-full items-center justify-center bg-gradient-to-b from-gray-400 to-gray-500 text-white text-2xl font-semibold"
+            className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-400 to-gray-500 text-white text-2xl font-semibold"
             style={{ display: iconUrl ? 'none' : 'flex' }}
           >
             {title.charAt(0).toUpperCase()}
@@ -115,6 +120,7 @@ export function AppIcon({
 
 /**
  * Dock Icon - Same as AppIcon but without label
+ * IMPORTANT: Uses squircle mask to clip all icon images
  */
 interface DockIconProps {
   id: string
@@ -146,21 +152,26 @@ export function DockIcon({
         animation: isJiggling ? 'jiggle 0.15s ease-in-out infinite alternate' : 'none'
       }}
     >
+      {/* Icon Container - SQUIRCLE MASK applied to ALL icons */}
       <div 
-        className="overflow-hidden"
+        className="relative flex items-center justify-center bg-white"
         style={{
           width: ICON_SIZE,
           height: ICON_SIZE,
           borderRadius: ICON_RADIUS,
           boxShadow: '0 1px 3px rgba(0,0,0,0.12)',
+          overflow: 'hidden', // CRITICAL: clips circular icons to squircle
         }}
       >
         {iconUrl ? (
           <img 
             src={iconUrl} 
             alt={title} 
-            className="h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
             draggable={false}
+            style={{
+              objectFit: 'cover',
+            }}
             onError={(e) => {
               e.currentTarget.style.display = 'none'
               const fallback = e.currentTarget.nextElementSibling as HTMLElement
@@ -169,7 +180,7 @@ export function DockIcon({
           />
         ) : null}
         <div 
-          className="h-full w-full items-center justify-center bg-gradient-to-b from-gray-400 to-gray-500 text-white text-xl font-semibold"
+          className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-400 to-gray-500 text-white text-xl font-semibold"
           style={{ display: iconUrl ? 'none' : 'flex' }}
         >
           {title.charAt(0).toUpperCase()}

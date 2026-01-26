@@ -107,38 +107,79 @@ export function PublicProfile({ username, serverProfile, serverLinks }: PublicPr
         onClick={handleBackgroundClick}
       >
         
-        {/* Status Bar */}
+        {/* Status Bar - High-fidelity iOS design */}
         <div 
-          className="relative z-30 flex w-full items-center justify-between px-6"
-          style={{ height: STATUS_BAR_HEIGHT, paddingTop: 12 }}
+          className="relative z-30 flex w-full items-center justify-between px-7"
+          style={{ height: STATUS_BAR_HEIGHT, paddingTop: 14 }}
         >
-          {/* Time */}
+          {/* Time - iOS SF Pro semibold */}
           <span 
-            className="text-[15px] font-semibold text-black"
-            style={{ fontFamily: SYSTEM_FONT }}
+            className="text-[17px] font-semibold tracking-[-0.4px]"
+            style={{ 
+              fontFamily: SYSTEM_FONT,
+              color: '#000',
+              fontWeight: 600,
+            }}
           >
             9:41
           </span>
           
           {/* Right indicators - Signal, WiFi, Battery */}
-          <div className="flex items-center gap-1">
-            {/* Signal bars */}
-            <div className="flex items-end gap-[2px] h-3">
-              <div className="w-[3px] h-1.5 rounded-sm bg-black"></div>
-              <div className="w-[3px] h-2 rounded-sm bg-black"></div>
-              <div className="w-[3px] h-2.5 rounded-sm bg-black"></div>
-              <div className="w-[3px] h-3 rounded-sm bg-black"></div>
+          <div className="flex items-center gap-[5px]">
+            {/* Cellular Signal - 4 bars with proper spacing */}
+            <div className="flex items-end gap-[1.5px]" style={{ height: 12 }}>
+              <div className="w-[3px] rounded-[1px] bg-black" style={{ height: 4 }}></div>
+              <div className="w-[3px] rounded-[1px] bg-black" style={{ height: 6 }}></div>
+              <div className="w-[3px] rounded-[1px] bg-black" style={{ height: 9 }}></div>
+              <div className="w-[3px] rounded-[1px] bg-black" style={{ height: 12 }}></div>
             </div>
-            {/* WiFi */}
-            <svg className="w-4 h-3 ml-1" viewBox="0 0 16 12" fill="black">
-              <path d="M8 2C11.5 2 14.5 3.5 16 6L14.5 7.5C13.3 5.5 10.8 4 8 4C5.2 4 2.7 5.5 1.5 7.5L0 6C1.5 3.5 4.5 2 8 2ZM8 5C10.2 5 12.2 6 13.5 7.5L12 9C11 7.8 9.6 7 8 7C6.4 7 5 7.8 4 9L2.5 7.5C3.8 6 5.8 5 8 5ZM8 8C9.3 8 10.5 8.6 11.2 9.5L8 12L4.8 9.5C5.5 8.6 6.7 8 8 8Z"/>
+            
+            {/* WiFi - Apple's official icon path */}
+            <svg 
+              width="17" 
+              height="12" 
+              viewBox="0 0 17 12" 
+              fill="none"
+              style={{ marginLeft: 2 }}
+            >
+              <path 
+                fillRule="evenodd" 
+                clipRule="evenodd" 
+                d="M8.5 2.4C11.1 2.4 13.5 3.4 15.2 5.1C15.5 5.4 15.5 5.9 15.2 6.2C14.9 6.5 14.4 6.5 14.1 6.2C12.7 4.8 10.7 3.9 8.5 3.9C6.3 3.9 4.3 4.8 2.9 6.2C2.6 6.5 2.1 6.5 1.8 6.2C1.5 5.9 1.5 5.4 1.8 5.1C3.5 3.4 5.9 2.4 8.5 2.4ZM8.5 5.4C10.2 5.4 11.8 6.1 12.9 7.2C13.2 7.5 13.2 8 12.9 8.3C12.6 8.6 12.1 8.6 11.8 8.3C11 7.5 9.8 7 8.5 7C7.2 7 6 7.5 5.2 8.3C4.9 8.6 4.4 8.6 4.1 8.3C3.8 8 3.8 7.5 4.1 7.2C5.2 6.1 6.8 5.4 8.5 5.4ZM10.2 10C10.2 10.9 9.4 11.7 8.5 11.7C7.6 11.7 6.8 10.9 6.8 10C6.8 9.1 7.6 8.3 8.5 8.3C9.4 8.3 10.2 9.1 10.2 10Z" 
+                fill="black"
+              />
             </svg>
-            {/* Battery */}
-            <div className="ml-1 flex items-center">
-              <div className="w-6 h-3 rounded-[3px] border border-black/40 relative">
-                <div className="absolute inset-[2px] right-1 bg-black rounded-[1px]"></div>
+            
+            {/* Battery - proper iOS proportions */}
+            <div className="flex items-center" style={{ marginLeft: 2 }}>
+              <div 
+                className="relative flex items-center justify-center"
+                style={{
+                  width: 25,
+                  height: 12,
+                  borderRadius: 3,
+                  border: '1px solid rgba(0,0,0,0.35)',
+                }}
+              >
+                {/* Battery fill */}
+                <div 
+                  className="absolute left-[2px] top-[2px] bottom-[2px] bg-black"
+                  style={{ 
+                    right: 4,
+                    borderRadius: 1.5,
+                  }}
+                ></div>
               </div>
-              <div className="w-[3px] h-1.5 rounded-r-sm bg-black/40 -ml-[1px]"></div>
+              {/* Battery cap */}
+              <div 
+                style={{
+                  width: 2,
+                  height: 5,
+                  backgroundColor: 'rgba(0,0,0,0.35)',
+                  borderRadius: '0 1px 1px 0',
+                  marginLeft: 0.5,
+                }}
+              ></div>
             </div>
           </div>
         </div>
