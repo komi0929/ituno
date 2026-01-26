@@ -95,8 +95,7 @@ export function PublicProfile({ username, serverProfile, serverLinks }: PublicPr
         style={{ backgroundImage: `url(${wallpaper})` }}
         onClick={handleWallpaperClick}
       >
-        {/* Status Bar */}
-        <Status barWrapperClassName="pt-1 px-6" /> {/* Adjusted for no-bezel */}
+        {/* Status Bar - Absolute positioned at top */}
         <div className="absolute top-0 w-full px-6 pt-3 z-50 pointer-events-none">
              <StatusBar />
         </div>
