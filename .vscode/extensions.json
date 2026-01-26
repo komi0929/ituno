@@ -1,0 +1,14 @@
+{
+    "recommendations": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss",
+        "dsznajder.es7-react-js-snippets",
+        "yoavbls.pretty-ts-errors",
+        "christian-kohler.path-intellisense",
+        "aaron-bond.better-comments",
+        "usernamehw.errorlens",
+        "eamodio.gitlens",
+        "wallabyjs.console-ninja"
+    ]
+}
