@@ -1,7 +1,7 @@
 
 "use client"
 
-import { LIQUID_GLASS_STYLE } from "@/lib/ios-physics"
+import { LIQUID_PHYSICS } from "@/lib/ios-physics"
 import { Database } from "@/lib/types/schema"
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"]
@@ -11,33 +11,31 @@ interface ProfileWidgetProps {
   className?: string
 }
 
-// WIDGET AREA - EXACT REFERENCE
+// PROFILE WIDGET (The "Water Bubble")
 export function ProfileWidget({ profile, className }: ProfileWidgetProps) {
   return (
     <div 
-      className={`mb-10 flex h-40 w-full flex-col justify-between rounded-[26px] p-6 text-white ${className || ''}`}
-      style={LIQUID_GLASS_STYLE}
+      className={`group mb-10 flex h-48 w-full flex-col justify-between rounded-[32px] p-6 text-white transition-transform duration-500 hover:scale-[1.02] ${className || ''}`}
+      style={LIQUID_PHYSICS}
     >
       <div className="flex items-start justify-between">
-        <div className="h-12 w-12 rounded-full overflow-hidden shadow-lg">
+        <div className="relative h-14 w-14 overflow-hidden rounded-full shadow-inner">
           {profile.avatar_url ? (
-            <img
-              src={profile.avatar_url}
-              alt={profile.full_name || "Avatar"}
-              className="h-full w-full object-cover"
-            />
+            <img src={profile.avatar_url} alt="Profile" className="h-full w-full object-cover" />
           ) : (
-            <div className="h-full w-full bg-gradient-to-tr from-yellow-400 to-orange-500 flex items-center justify-center text-white text-lg font-bold">
+            <div className="h-full w-full bg-gradient-to-tr from-yellow-400 to-orange-500 flex items-center justify-center text-white text-xl font-bold">
               {(profile.full_name || profile.username || "U").charAt(0).toUpperCase()}
             </div>
           )}
+          {/* Gloss overlay on avatar */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/20 to-transparent pointer-events-none" />
         </div>
-        <span className="text-xs font-medium uppercase tracking-wider opacity-70">Portfolio</span>
+        <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest backdrop-blur-md">Portfolio</span>
       </div>
-      <div>
-        <h1 className="text-2xl font-bold leading-tight drop-shadow-md">{profile.full_name || profile.username}</h1>
+      <div className="space-y-1">
+        <h1 className="text-3xl font-bold tracking-tight drop-shadow-sm">{profile.full_name || profile.username}</h1>
         {profile.bio && (
-          <p className="text-sm font-medium opacity-90 drop-shadow-md">{profile.bio}</p>
+          <p className="text-sm font-medium text-white/80">{profile.bio}</p>
         )}
       </div>
     </div>

@@ -2,7 +2,7 @@
 "use client"
 
 import { useLongPress } from "@/lib/hooks/use-long-press"
-import { ICON_SHADOW } from "@/lib/ios-physics"
+import { DOCK_ICON_PHYSICS, ICON_PHYSICS, SQUIRCLE_PATH } from "@/lib/ios-physics"
 import { X } from "lucide-react"
 
 interface AppIconProps {
@@ -17,12 +17,14 @@ interface AppIconProps {
   showLabel?: boolean
 }
 
-// COMPONENT: App Icon (The "Sticker" Look) - EXACT REFERENCE
+/* --- INTERACTION PHYSICS (Surface Tension) --- */
+/* The article describes "pulling" and "snapping" back like water. */
+
 export function AppIcon({
   id,
   title,
   iconUrl,
-  color = "bg-gray-800",
+  color = "#181717",
   isJiggling = false,
   onClick,
   onLongPress,
@@ -35,49 +37,59 @@ export function AppIcon({
   )
 
   return (
-    <div className="flex flex-col items-center gap-1.5 group cursor-pointer">
+    <div className="group flex flex-col items-center gap-2 cursor-pointer">
       <div 
         {...longPressProps}
-        className={`${color} flex h-[62px] w-[62px] items-center justify-center rounded-[14px] transition-transform duration-300 active:scale-90 overflow-hidden relative`}
-        style={ICON_SHADOW}
+        className="relative transition-transform duration-300 ease-[cubic-bezier(0.25,1.4,0.5,1)] group-active:scale-90"
       >
-        {iconUrl ? (
-          <img 
-            src={iconUrl} 
-            alt={title} 
-            className="h-full w-full object-cover"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none'
-              const fallback = e.currentTarget.nextElementSibling as HTMLElement
-              if (fallback) fallback.style.display = 'flex'
-            }}
-          />
-        ) : null}
         <div 
-          className="h-full w-full items-center justify-center text-white text-2xl font-bold"
-          style={{ display: iconUrl ? 'none' : 'flex' }}
+          className="flex h-[62px] w-[62px] items-center justify-center shadow-lg overflow-hidden"
+          style={{ 
+            background: color, 
+            clipPath: SQUIRCLE_PATH,
+            ...ICON_PHYSICS
+          }}
         >
-          {title.charAt(0).toUpperCase()}
+          {iconUrl ? (
+            <img 
+              src={iconUrl} 
+              alt={title} 
+              className="h-full w-full object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none'
+                const fallback = e.currentTarget.nextElementSibling as HTMLElement
+                if (fallback) fallback.style.display = 'flex'
+              }}
+            />
+          ) : null}
+          <div 
+            className="h-full w-full items-center justify-center text-white text-2xl font-bold"
+            style={{ display: iconUrl ? 'none' : 'flex' }}
+          >
+            {title.charAt(0).toUpperCase()}
+          </div>
         </div>
 
         {/* Jiggle mode remove button */}
         {isJiggling && onRemove && (
           <div
             onClick={(e) => { e.stopPropagation(); onRemove() }}
-            className="absolute -left-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-700 shadow"
+            className="absolute -left-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-700 shadow z-10"
           >
             <X className="h-3 w-3 text-white" strokeWidth={3} />
           </div>
         )}
       </div>
       {showLabel && (
-        <span className="text-[11px] font-medium text-white drop-shadow-md tracking-tight">{title}</span>
+        <span className="text-[11px] font-medium text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] tracking-tight">
+          {title}
+        </span>
       )}
     </div>
   )
 }
 
-// COMPONENT: Dock Icon (No Label) - EXACT REFERENCE
+// DOCK ICON (No Label)
 interface DockIconProps {
   id: string
   title: string
@@ -92,7 +104,7 @@ export function DockIcon({
   id,
   title,
   iconUrl,
-  color = "bg-gray-800",
+  color = "#181717",
   onClick,
   onLongPress,
   isJiggling = false,
@@ -105,26 +117,34 @@ export function DockIcon({
   return (
     <div 
       {...longPressProps}
-      className={`${color} flex h-[62px] w-[62px] items-center justify-center rounded-[14px] transition-transform duration-300 active:scale-90 active:brightness-90 overflow-hidden cursor-pointer`}
-      style={ICON_SHADOW}
+      className="relative transition-transform duration-300 ease-[cubic-bezier(0.25,1.5,0.5,1)] active:scale-75 hover:-translate-y-1 cursor-pointer"
     >
-      {iconUrl ? (
-        <img 
-          src={iconUrl} 
-          alt={title} 
-          className="h-full w-full object-cover"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none'
-            const fallback = e.currentTarget.nextElementSibling as HTMLElement
-            if (fallback) fallback.style.display = 'flex'
-          }}
-        />
-      ) : null}
       <div 
-        className="h-full w-full items-center justify-center text-white text-xl font-bold"
-        style={{ display: iconUrl ? 'none' : 'flex' }}
+        className="flex h-[60px] w-[60px] items-center justify-center shadow-lg overflow-hidden"
+        style={{ 
+          background: color, 
+          clipPath: SQUIRCLE_PATH,
+          ...DOCK_ICON_PHYSICS
+        }}
       >
-        {title.charAt(0).toUpperCase()}
+        {iconUrl ? (
+          <img 
+            src={iconUrl} 
+            alt={title} 
+            className="h-full w-full object-cover"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none'
+              const fallback = e.currentTarget.nextElementSibling as HTMLElement
+              if (fallback) fallback.style.display = 'flex'
+            }}
+          />
+        ) : null}
+        <div 
+          className="h-full w-full items-center justify-center text-white text-xl font-bold"
+          style={{ display: iconUrl ? 'none' : 'flex' }}
+        >
+          {title.charAt(0).toUpperCase()}
+        </div>
       </div>
     </div>
   )

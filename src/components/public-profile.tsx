@@ -5,7 +5,7 @@ import { AppIcon, DockIcon } from "@/components/ios/AppIcon"
 import { Dock } from "@/components/ios/Dock"
 import { ProfileWidget } from "@/components/ios/ProfileWidget"
 import { SortableAppIcon } from "@/components/ios/SortableAppIcon"
-import { MESH_WALLPAPER_STYLE } from "@/lib/ios-physics"
+import { DYNAMIC_ENVIRONMENT } from "@/lib/ios-physics"
 import { Database } from "@/lib/types/schema"
 import {
     closestCenter,
@@ -24,6 +24,7 @@ import {
     SortableContext,
     sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable"
+import { Battery, Signal, Wifi } from "lucide-react"
 import { useEffect, useState } from "react"
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"]
@@ -77,97 +78,97 @@ export function PublicProfile({ username, serverProfile, serverLinks }: PublicPr
   if (!isMounted) return null
 
   return (
-    // EXACT REFERENCE STRUCTURE
-    <div className="relative min-h-screen w-full overflow-hidden bg-black font-sans selection:bg-white/30">
+    // RESPONSIVE CONTAINER: Full bleed on Mobile, Device Frame on Desktop
+    <div className="flex min-h-screen w-full items-center justify-center bg-[#050505] font-sans selection:bg-cyan-500/30">
       
-      {/* WALLPAPER (Dynamic Mesh) */}
-      <div 
-        className="absolute inset-0 z-0"
-        style={MESH_WALLPAPER_STYLE}
-        onClick={handleWallpaperClick}
-      />
+      {/* PHONE CHASSIS (Visible only on lg screens) */}
+      <div className="relative flex h-[100dvh] w-full flex-col overflow-hidden bg-black lg:h-[880px] lg:w-[420px] lg:rounded-[60px] lg:border-[14px] lg:border-[#1a1a1a] lg:shadow-2xl lg:ring-2 lg:ring-[#333]">
+        
+        {/* DYNAMIC ENVIRONMENT (The Light Source) */}
+        <div 
+          className="absolute inset-0 z-0"
+          style={DYNAMIC_ENVIRONMENT}
+          onClick={handleWallpaperClick}
+        />
 
-      {/* STATUS BAR AREA */}
-      <div className="relative z-50 flex h-14 w-full items-end justify-between px-8 pb-2 text-white">
-        <span className="text-[15px] font-semibold">9:41</span>
-        <div className="flex gap-1.5 items-center">
-          <div className="flex gap-0.5">
-            <div className="h-2.5 w-1 rounded-sm bg-white"></div>
-            <div className="h-3 w-1 rounded-sm bg-white"></div>
-            <div className="h-3.5 w-1 rounded-sm bg-white"></div>
-            <div className="h-4 w-1 rounded-sm bg-white/40"></div>
-          </div>
-          <span className="text-[15px] font-semibold ml-1">LTE</span>
-          <div className="ml-2 h-4 w-7 rounded-sm border border-white/40 relative">
-            <div className="absolute inset-0.5 right-1 bg-white rounded-sm"></div>
-            <div className="absolute -right-0.5 top-1 h-2 w-0.5 bg-white/40 rounded-r"></div>
+        {/* Status Bar */}
+        <div className="relative z-50 flex h-14 w-full items-end justify-between px-7 pb-2 text-white/90">
+          <span className="text-[15px] font-semibold tracking-wide">9:41</span>
+          <div className="flex items-center gap-1.5">
+            <Signal size={16} strokeWidth={2.5} />
+            <Wifi size={16} strokeWidth={2.5} />
+            <Battery size={22} strokeWidth={2.5} />
           </div>
         </div>
+
+        {/* Dynamic Island */}
+        <div className="absolute left-1/2 top-3 z-50 h-[34px] w-[120px] -translate-x-1/2 rounded-full bg-black shadow-lg" />
+
+        <main className="relative z-10 flex flex-1 flex-col px-6 pt-6 overflow-y-auto">
+          
+          {/* PROFILE WIDGET (The "Water Bubble") */}
+          <ProfileWidget profile={serverProfile} />
+
+          {/* APP GRID */}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="grid grid-cols-4 gap-y-8">
+              <SortableContext items={gridLinks} strategy={rectSortingStrategy}>
+                {gridLinks.map((link) => (
+                  <SortableAppIcon
+                    key={link.id}
+                    id={link.id}
+                    title={link.title}
+                    iconUrl={link.icon_url}
+                    isJiggling={isJiggleMode}
+                    onLongPress={() => setIsJiggleMode(true)}
+                    onClick={() => !isJiggleMode && window.open(link.url, "_blank")}
+                    onRemove={() => console.log("Remove", link.id)}
+                  />
+                ))}
+              </SortableContext>
+            </div>
+
+            <DragOverlay>
+              {activeItem ? (
+                <div className="scale-110 opacity-90">
+                  <AppIcon
+                    id={activeItem.id}
+                    title={activeItem.title}
+                    iconUrl={activeItem.icon_url}
+                    isJiggling={true}
+                  />
+                </div>
+              ) : null}
+            </DragOverlay>
+          </DndContext>
+
+        </main>
+
+        {/* THE DOCK (The Floating Meniscus) */}
+        {dockLinks.length > 0 && (
+          <Dock>
+            {dockLinks.map((link) => (
+              <DockIcon
+                key={link.id}
+                id={link.id}
+                title={link.title}
+                iconUrl={link.icon_url}
+                isJiggling={isJiggleMode}
+                onLongPress={() => setIsJiggleMode(true)}
+                onClick={() => !isJiggleMode && window.open(link.url, "_blank")}
+              />
+            ))}
+          </Dock>
+        )}
+
+        {/* Home Indicator */}
+        <div className="absolute bottom-2 left-1/2 h-1.5 w-36 -translate-x-1/2 rounded-full bg-white/60 backdrop-blur-md z-50" />
       </div>
-
-      {/* MAIN CONTENT */}
-      <main className="relative z-10 mx-auto max-w-md px-6 pt-2">
-        
-        {/* WIDGET AREA */}
-        <ProfileWidget profile={serverProfile} />
-
-        {/* APP GRID */}
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-        >
-          <div className="grid grid-cols-4 gap-y-8 px-2">
-            <SortableContext items={gridLinks} strategy={rectSortingStrategy}>
-              {gridLinks.map((link) => (
-                <SortableAppIcon
-                  key={link.id}
-                  id={link.id}
-                  title={link.title}
-                  iconUrl={link.icon_url}
-                  isJiggling={isJiggleMode}
-                  onLongPress={() => setIsJiggleMode(true)}
-                  onClick={() => !isJiggleMode && window.open(link.url, "_blank")}
-                  onRemove={() => console.log("Remove", link.id)}
-                />
-              ))}
-            </SortableContext>
-          </div>
-
-          <DragOverlay>
-            {activeItem ? (
-              <div className="scale-110 opacity-90">
-                <AppIcon
-                  id={activeItem.id}
-                  title={activeItem.title}
-                  iconUrl={activeItem.icon_url}
-                  isJiggling={true}
-                />
-              </div>
-            ) : null}
-          </DragOverlay>
-        </DndContext>
-
-      </main>
-
-      {/* THE DOCK */}
-      {dockLinks.length > 0 && (
-        <Dock>
-          {dockLinks.map((link) => (
-            <DockIcon
-              key={link.id}
-              id={link.id}
-              title={link.title}
-              iconUrl={link.icon_url}
-              isJiggling={isJiggleMode}
-              onLongPress={() => setIsJiggleMode(true)}
-              onClick={() => !isJiggleMode && window.open(link.url, "_blank")}
-            />
-          ))}
-        </Dock>
-      )}
-      
     </div>
   )
 }
