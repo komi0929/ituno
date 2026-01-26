@@ -2,13 +2,14 @@
 "use client"
 
 import { useLongPress } from "@/lib/hooks/use-long-press"
-import { motion } from "framer-motion"
+import { ICON_SHADOW } from "@/lib/ios-physics"
 import { X } from "lucide-react"
 
 interface AppIconProps {
   id: string
   title: string
   iconUrl?: string | null
+  color?: string
   isJiggling?: boolean
   onClick?: () => void
   onLongPress?: () => void
@@ -16,10 +17,12 @@ interface AppIconProps {
   showLabel?: boolean
 }
 
+// COMPONENT: App Icon (The "Sticker" Look) - EXACT REFERENCE
 export function AppIcon({
   id,
   title,
   iconUrl,
+  color = "bg-gray-800",
   isJiggling = false,
   onClick,
   onLongPress,
@@ -28,36 +31,20 @@ export function AppIcon({
 }: AppIconProps) {
   const longPressProps = useLongPress(
     onLongPress || (() => {}),
-    {
-      onCancel: onClick,
-    }
+    { onCancel: onClick }
   )
 
   return (
-    <div className="relative flex flex-col items-center">
-      <motion.button
+    <div className="flex flex-col items-center gap-1.5 group cursor-pointer">
+      <div 
         {...longPressProps}
-        whileTap={{ scale: isJiggling ? 1 : 0.9 }}
-        animate={
-          isJiggling
-            ? {
-                rotate: [-1.5, 1.5, -1.5],
-                transition: {
-                  repeat: Infinity,
-                  duration: 0.15,
-                  ease: "easeInOut",
-                },
-              }
-            : {}
-        }
-        // EXACT: 60px, rounded-[14px] (squircle), shadow-sm, NO border
-        className="relative h-[60px] w-[60px] overflow-hidden rounded-[14px] shadow-sm"
+        className={`${color} flex h-[62px] w-[62px] items-center justify-center rounded-[14px] transition-transform duration-300 active:scale-90 overflow-hidden relative`}
+        style={ICON_SHADOW}
       >
         {iconUrl ? (
           <img 
             src={iconUrl} 
             alt={title} 
-            // EXACT: object-cover, fill 100%
             className="h-full w-full object-cover"
             onError={(e) => {
               e.currentTarget.style.display = 'none'
@@ -66,37 +53,79 @@ export function AppIcon({
             }}
           />
         ) : null}
-        {/* Fallback */}
         <div 
-          className="h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 font-bold text-white text-2xl"
+          className="h-full w-full items-center justify-center text-white text-2xl font-bold"
           style={{ display: iconUrl ? 'none' : 'flex' }}
         >
           {title.charAt(0).toUpperCase()}
         </div>
 
-        {/* Remove button in jiggle mode */}
+        {/* Jiggle mode remove button */}
         {isJiggling && onRemove && (
           <div
-            onClick={(e) => {
-              e.stopPropagation()
-              onRemove()
-            }}
+            onClick={(e) => { e.stopPropagation(); onRemove() }}
             className="absolute -left-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-700 shadow"
           >
             <X className="h-3 w-3 text-white" strokeWidth={3} />
           </div>
         )}
-      </motion.button>
-      
-      {/* EXACT: text-[11px] text-white drop-shadow-md font-medium mt-1 */}
+      </div>
       {showLabel && (
-        <span 
-          className="mt-1 w-[70px] truncate text-center text-[11px] font-medium text-white drop-shadow-md"
-          style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif' }}
-        >
-          {title}
-        </span>
+        <span className="text-[11px] font-medium text-white drop-shadow-md tracking-tight">{title}</span>
       )}
+    </div>
+  )
+}
+
+// COMPONENT: Dock Icon (No Label) - EXACT REFERENCE
+interface DockIconProps {
+  id: string
+  title: string
+  iconUrl?: string | null
+  color?: string
+  onClick?: () => void
+  onLongPress?: () => void
+  isJiggling?: boolean
+}
+
+export function DockIcon({
+  id,
+  title,
+  iconUrl,
+  color = "bg-gray-800",
+  onClick,
+  onLongPress,
+  isJiggling = false,
+}: DockIconProps) {
+  const longPressProps = useLongPress(
+    onLongPress || (() => {}),
+    { onCancel: onClick }
+  )
+
+  return (
+    <div 
+      {...longPressProps}
+      className={`${color} flex h-[62px] w-[62px] items-center justify-center rounded-[14px] transition-transform duration-300 active:scale-90 active:brightness-90 overflow-hidden cursor-pointer`}
+      style={ICON_SHADOW}
+    >
+      {iconUrl ? (
+        <img 
+          src={iconUrl} 
+          alt={title} 
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none'
+            const fallback = e.currentTarget.nextElementSibling as HTMLElement
+            if (fallback) fallback.style.display = 'flex'
+          }}
+        />
+      ) : null}
+      <div 
+        className="h-full w-full items-center justify-center text-white text-xl font-bold"
+        style={{ display: iconUrl ? 'none' : 'flex' }}
+      >
+        {title.charAt(0).toUpperCase()}
+      </div>
     </div>
   )
 }

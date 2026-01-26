@@ -1,15 +1,22 @@
 
 "use client"
 
+import { LIQUID_GLASS_STYLE } from "@/lib/ios-physics"
+
 interface DockProps {
   children: React.ReactNode
 }
 
+// THE DOCK (Floating Glass Platter) - EXACT REFERENCE
 export function Dock({ children }: DockProps) {
   return (
-    // EXACT iOS Dock: 92% width, h-24, heavy blur, rounded-[35px]
-    <div className="w-[92%] h-24 bg-white/20 backdrop-blur-3xl rounded-[35px] mx-auto absolute bottom-4 left-0 right-0 z-10 flex items-center justify-evenly px-4">
-      {children}
+    <div className="fixed bottom-4 left-0 right-0 z-50 flex justify-center">
+      <div 
+        className="flex h-[96px] w-[90%] max-w-md items-center justify-evenly rounded-[34px]"
+        style={LIQUID_GLASS_STYLE}
+      >
+        {children}
+      </div>
     </div>
   )
 }
