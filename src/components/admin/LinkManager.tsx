@@ -164,7 +164,7 @@ export function LinkManager({ userId, links, onLinksChange }: LinkManagerProps) 
     onLinksChange(links.map((l) => (l.id === id ? { ...l, ...updates } : l)))
 
     // Persist to DB
-    await supabase.from("links").update(updates as any).eq("id", id)
+    await (supabase.from("links") as any).update(updates).eq("id", id)
   }
 
   const handleDeleteLink = async (id: string) => {
@@ -172,7 +172,7 @@ export function LinkManager({ userId, links, onLinksChange }: LinkManagerProps) 
     onLinksChange(links.filter((l) => l.id !== id))
 
     // Persist to DB
-    await supabase.from("links").delete().eq("id", id)
+    await (supabase.from("links") as any).delete().eq("id", id)
   }
 
   const handleDragEnd = async (event: DragEndEvent) => {
@@ -188,7 +188,7 @@ export function LinkManager({ userId, links, onLinksChange }: LinkManagerProps) 
 
       // Batch update sort_order in DB
       for (const link of newLinks) {
-        await supabase.from("links").update({ sort_order: link.sort_order } as any).eq("id", link.id)
+        await (supabase.from("links") as any).update({ sort_order: link.sort_order }).eq("id", link.id)
       }
     }
   }
