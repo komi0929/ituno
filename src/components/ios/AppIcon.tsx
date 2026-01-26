@@ -35,46 +35,51 @@ export function AppIcon({
   )
 
   return (
-    <div className="relative flex flex-col items-center gap-1.5">
+    <div className="relative flex flex-col items-center gap-[6px]">
       <motion.button
         {...longPressProps}
-        whileTap={{ scale: isJiggling ? 1 : 0.88 }}
+        whileTap={{ scale: isJiggling ? 1 : 0.85 }}
         animate={
           isJiggling
             ? {
                 rotate: [-1.5, 1.5, -1.5],
                 transition: {
                   repeat: Infinity,
-                  duration: 0.2,
+                  duration: 0.15,
                   ease: "easeInOut",
                 },
               }
             : {}
         }
         className={cn(
-          "relative flex items-center justify-center h-[60px] w-[60px] overflow-hidden rounded-[14px] transition-all duration-200",
-          "bg-white/20 backdrop-blur-xl border border-white/30",
-          "shadow-[0_4px_16px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.3)]",
-          "active:scale-95"
+          // Full-bleed icon - NO glass container, NO padding, NO border
+          "relative h-[60px] w-[60px] overflow-hidden rounded-[14px]",
+          // Shadow for depth
+          "shadow-lg",
+          "active:brightness-90 transition-all duration-150"
         )}
       >
         {iconUrl ? (
           <img 
             src={iconUrl} 
             alt={title} 
-            className="h-10 w-10 object-contain"
+            className="h-full w-full object-cover" // Full-bleed, no padding
             onError={(e) => {
-              // Fallback to letter if image fails
               e.currentTarget.style.display = 'none'
-              e.currentTarget.nextElementSibling?.classList.remove('hidden')
+              if (e.currentTarget.nextElementSibling) {
+                (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'flex'
+              }
             }}
           />
         ) : null}
-        {/* Fallback letter - shown if no icon or icon fails to load */}
-        <div className={cn(
-          "flex h-full w-full items-center justify-center font-bold text-white text-2xl",
-          iconUrl ? "hidden" : ""
-        )}>
+        {/* Fallback letter */}
+        <div 
+          className={cn(
+            "h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 font-bold text-white text-2xl",
+            iconUrl ? "hidden" : "flex"
+          )}
+          style={{ display: iconUrl ? 'none' : 'flex' }}
+        >
           {title.charAt(0).toUpperCase()}
         </div>
 
@@ -85,18 +90,21 @@ export function AppIcon({
               e.stopPropagation()
               onRemove()
             }}
-            className="absolute -left-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 backdrop-blur-sm shadow-md"
+            className="absolute -left-1 -top-1 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-zinc-800/90 border border-white/20 shadow-md"
           >
-            <X className="h-3 w-3 text-white" />
+            <X className="h-3 w-3 text-white" strokeWidth={3} />
           </div>
         )}
       </motion.button>
       
-      {/* Icon Label */}
+      {/* Icon Label - White with text-shadow */}
       {showLabel && (
         <span 
-          className="w-[72px] truncate text-center text-[11px] font-medium leading-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] select-none"
-          style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}
+          className="w-[74px] truncate text-center text-[11px] font-medium leading-tight text-white select-none"
+          style={{ 
+            fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif',
+            textShadow: '0 1px 3px rgba(0,0,0,0.5), 0 0px 1px rgba(0,0,0,0.3)'
+          }}
         >
           {title}
         </span>
