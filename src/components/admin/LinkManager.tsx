@@ -25,6 +25,7 @@ import { GripVertical, Loader2, Plus, Trash2 } from "lucide-react"
 import { useState } from "react"
 
 type Link = Database["public"]["Tables"]["links"]["Row"]
+type LinkInsert = Database["public"]["Tables"]["links"]["Insert"]
 
 interface LinkManagerProps {
   userId: string
@@ -103,7 +104,7 @@ function SortableLinkItem({ link, onUpdate, onDelete }: SortableLinkItemProps) {
         <label className="flex items-center gap-2 text-xs text-zinc-400">
           <input
             type="checkbox"
-            checked={link.is_docked}
+            checked={link.is_docked ?? false}
             onChange={(e) => onUpdate(link.id, { is_docked: e.target.checked })}
             className="rounded border-zinc-600"
           />
@@ -134,7 +135,7 @@ export function LinkManager({ userId, links, onLinksChange }: LinkManagerProps) 
   const handleAddLink = async () => {
     setIsAdding(true)
     try {
-      const newLink = {
+      const newLink: LinkInsert = {
         user_id: userId,
         title: "新しいリンク",
         url: "https://example.com",
@@ -145,12 +146,12 @@ export function LinkManager({ userId, links, onLinksChange }: LinkManagerProps) 
 
       const { data, error } = await supabase
         .from("links")
-        .insert(newLink)
+        .insert(newLink as any)
         .select()
         .single()
 
       if (error) throw error
-      onLinksChange([...links, data])
+      if (data) onLinksChange([...links, data as Link])
     } catch (err) {
       console.error("Failed to add link:", err)
     } finally {
@@ -163,7 +164,7 @@ export function LinkManager({ userId, links, onLinksChange }: LinkManagerProps) 
     onLinksChange(links.map((l) => (l.id === id ? { ...l, ...updates } : l)))
 
     // Persist to DB
-    await supabase.from("links").update(updates).eq("id", id)
+    await supabase.from("links").update(updates as any).eq("id", id)
   }
 
   const handleDeleteLink = async (id: string) => {
@@ -187,7 +188,7 @@ export function LinkManager({ userId, links, onLinksChange }: LinkManagerProps) 
 
       // Batch update sort_order in DB
       for (const link of newLinks) {
-        await supabase.from("links").update({ sort_order: link.sort_order }).eq("id", link.id)
+        await supabase.from("links").update({ sort_order: link.sort_order } as any).eq("id", link.id)
       }
     }
   }

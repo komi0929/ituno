@@ -45,13 +45,13 @@ export function ProfileEditor({ userId, profile, onProfileChange }: ProfileEdito
 
       const { data, error } = await supabase
         .from("profiles")
-        .upsert(profileData)
+        .upsert(profileData as any)
         .select()
         .single()
 
       if (error) throw error
 
-      onProfileChange(data)
+      if (data) onProfileChange(data as Profile)
       setMessage({ type: "success", text: "保存しました" })
     } catch (err: unknown) {
       setMessage({ type: "error", text: err instanceof Error ? err.message : "保存に失敗しました" })
