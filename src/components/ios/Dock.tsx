@@ -1,19 +1,34 @@
-
 "use client"
 
-import { LIQUID_STYLE } from "@/lib/ios-physics"
+import {
+    DOCK_BACKGROUND,
+    DOCK_BLUR,
+    DOCK_BORDER_RADIUS,
+    DOCK_HEIGHT,
+} from "@/lib/ios-constants"
 
 interface DockProps {
   children: React.ReactNode
 }
 
-// DOCK: NO BORDER, JUST VOLUME
+/**
+ * iOS Dock - Frosted glass background
+ * - Full width with horizontal padding
+ * - 4 icons evenly distributed
+ * - No labels on dock icons
+ */
 export function Dock({ children }: DockProps) {
   return (
-    <div className="relative z-50 w-full shrink-0 px-4 pb-8 pt-2 flex justify-center">
+    <div className="absolute bottom-0 left-0 right-0 z-20 px-2 pb-2">
       <div 
-        className="flex h-[92px] w-full max-w-[360px] items-center justify-evenly rounded-[36px]"
-        style={LIQUID_STYLE}
+        className="flex w-full items-center justify-evenly"
+        style={{
+          height: DOCK_HEIGHT,
+          borderRadius: DOCK_BORDER_RADIUS,
+          background: DOCK_BACKGROUND,
+          backdropFilter: `blur(${DOCK_BLUR}px) saturate(180%)`,
+          WebkitBackdropFilter: `blur(${DOCK_BLUR}px) saturate(180%)`,
+        }}
       >
         {children}
       </div>

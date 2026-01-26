@@ -1,15 +1,20 @@
-
 "use client"
 
 import { useLongPress } from "@/lib/hooks/use-long-press"
-import { ICON_LIFT, SQUIRCLE } from "@/lib/ios-physics"
+import {
+    ICON_RADIUS,
+    ICON_SIZE,
+    LABEL_COLOR,
+    LABEL_FONT_SIZE,
+    LABEL_WIDTH,
+    SYSTEM_FONT,
+} from "@/lib/ios-constants"
 import { X } from "lucide-react"
 
 interface AppIconProps {
   id: string
   title: string
   iconUrl?: string | null
-  color?: string
   isJiggling?: boolean
   onClick?: () => void
   onLongPress?: () => void
@@ -17,12 +22,16 @@ interface AppIconProps {
   showLabel?: boolean
 }
 
-/* --- INTERACTION --- */
+/**
+ * Standard iOS App Icon
+ * - 60x60px with 13px border-radius (squircle)
+ * - Label centered below (11px gray text)
+ * - No Liquid Glass effects - just accurate iOS reproduction
+ */
 export function AppIcon({
   id,
   title,
   iconUrl,
-  color = "#171515",
   isJiggling = false,
   onClick,
   onLongPress,
@@ -35,18 +44,22 @@ export function AppIcon({
   )
 
   return (
-    <div className="group flex flex-col items-center gap-1.5 cursor-pointer">
+    <div className="flex flex-col items-center">
       <div 
         {...longPressProps}
-        className="relative transition-transform duration-300 ease-[cubic-bezier(0.25,1.4,0.5,1)] group-active:scale-90"
+        className="relative cursor-pointer transition-transform duration-150 active:scale-90"
+        style={{
+          animation: isJiggling ? 'jiggle 0.15s ease-in-out infinite alternate' : 'none'
+        }}
       >
+        {/* Icon Container - 60x60, 13px radius */}
         <div 
-          className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden"
-          style={{ 
-            background: color, 
-            clipPath: SQUIRCLE,
-            // REMOVED BORDERS. Added pure lift shadow.
-            ...ICON_LIFT
+          className="relative overflow-hidden"
+          style={{
+            width: ICON_SIZE,
+            height: ICON_SIZE,
+            borderRadius: ICON_RADIUS,
+            boxShadow: '0 1px 3px rgba(0,0,0,0.12)',
           }}
         >
           {iconUrl ? (
@@ -54,6 +67,7 @@ export function AppIcon({
               src={iconUrl} 
               alt={title} 
               className="h-full w-full object-cover"
+              draggable={false}
               onError={(e) => {
                 e.currentTarget.style.display = 'none'
                 const fallback = e.currentTarget.nextElementSibling as HTMLElement
@@ -61,26 +75,37 @@ export function AppIcon({
               }}
             />
           ) : null}
+          {/* Fallback - gradient with initial letter */}
           <div 
-            className="h-full w-full items-center justify-center text-white text-2xl font-bold"
+            className="h-full w-full items-center justify-center bg-gradient-to-b from-gray-400 to-gray-500 text-white text-2xl font-semibold"
             style={{ display: iconUrl ? 'none' : 'flex' }}
           >
             {title.charAt(0).toUpperCase()}
           </div>
         </div>
 
-        {/* Jiggle mode remove button */}
+        {/* Delete button in jiggle mode */}
         {isJiggling && onRemove && (
-          <div
+          <button
             onClick={(e) => { e.stopPropagation(); onRemove() }}
-            className="absolute -left-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-700 shadow z-10"
+            className="absolute -left-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-500/90 shadow"
           >
-            <X className="h-3 w-3 text-white" strokeWidth={3} />
-          </div>
+            <X className="h-3 w-3 text-white" strokeWidth={2.5} />
+          </button>
         )}
       </div>
+      
+      {/* Label - 11px, centered, gray */}
       {showLabel && (
-        <span className="text-[11px] font-medium text-white drop-shadow-md tracking-tight">
+        <span 
+          className="mt-1.5 truncate text-center font-normal select-none"
+          style={{ 
+            fontFamily: SYSTEM_FONT,
+            fontSize: LABEL_FONT_SIZE,
+            color: LABEL_COLOR,
+            width: LABEL_WIDTH,
+          }}
+        >
           {title}
         </span>
       )}
@@ -88,12 +113,13 @@ export function AppIcon({
   )
 }
 
-// DOCK ICON (No Label)
+/**
+ * Dock Icon - Same as AppIcon but without label
+ */
 interface DockIconProps {
   id: string
   title: string
   iconUrl?: string | null
-  color?: string
   onClick?: () => void
   onLongPress?: () => void
   isJiggling?: boolean
@@ -103,7 +129,6 @@ export function DockIcon({
   id,
   title,
   iconUrl,
-  color = "#171515",
   onClick,
   onLongPress,
   isJiggling = false,
@@ -116,17 +141,26 @@ export function DockIcon({
   return (
     <div 
       {...longPressProps}
-      className="relative transition-transform duration-300 ease-[cubic-bezier(0.25,1.4,0.5,1)] active:scale-75 hover:-translate-y-2 cursor-pointer"
+      className="relative cursor-pointer transition-transform duration-150 active:scale-90"
+      style={{
+        animation: isJiggling ? 'jiggle 0.15s ease-in-out infinite alternate' : 'none'
+      }}
     >
       <div 
-        className="flex h-[58px] w-[58px] items-center justify-center shadow-lg overflow-hidden"
-        style={{ background: color, clipPath: SQUIRCLE }}
+        className="overflow-hidden"
+        style={{
+          width: ICON_SIZE,
+          height: ICON_SIZE,
+          borderRadius: ICON_RADIUS,
+          boxShadow: '0 1px 3px rgba(0,0,0,0.12)',
+        }}
       >
         {iconUrl ? (
           <img 
             src={iconUrl} 
             alt={title} 
             className="h-full w-full object-cover"
+            draggable={false}
             onError={(e) => {
               e.currentTarget.style.display = 'none'
               const fallback = e.currentTarget.nextElementSibling as HTMLElement
@@ -135,7 +169,7 @@ export function DockIcon({
           />
         ) : null}
         <div 
-          className="h-full w-full items-center justify-center text-white text-xl font-bold"
+          className="h-full w-full items-center justify-center bg-gradient-to-b from-gray-400 to-gray-500 text-white text-xl font-semibold"
           style={{ display: iconUrl ? 'none' : 'flex' }}
         >
           {title.charAt(0).toUpperCase()}
