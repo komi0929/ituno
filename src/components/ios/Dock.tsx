@@ -9,11 +9,10 @@ interface DockProps {
 
 export function Dock({ children }: DockProps) {
   return (
-    <div className="absolute bottom-5 left-4 right-4 z-10 mx-auto">
+    <div className="absolute bottom-4 left-4 right-4 z-10 mx-auto">
       <div className={cn(
-        "flex h-[96px] w-full items-center justify-evenly rounded-[35px]",
-        "bg-white/20 backdrop-blur-[25px] saturate-150", // Authentic Glassmorphism
-        "border border-white/10 shadow-lg"
+        "flex h-[88px] w-full items-center justify-evenly rounded-[32px] px-4",
+        "liquid-dock" // iOS 26 Liquid Glass Dock
       )}>
         {children}
       </div>

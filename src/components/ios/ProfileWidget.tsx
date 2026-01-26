@@ -15,17 +15,15 @@ export function ProfileWidget({ profile, className }: ProfileWidgetProps) {
   return (
     <div
       className={cn(
-        "relative flex h-[160px] w-full flex-col justify-between overflow-hidden rounded-[2rem] bg-white/20 p-6 backdrop-blur-xl transition-all active:scale-95",
+        "relative col-span-4 flex h-[170px] w-full flex-col justify-between overflow-hidden rounded-[28px] p-5",
+        "liquid-glass", // iOS 26 Liquid Glass
+        "transition-all duration-300 active:scale-[0.98]",
         className
       )}
-      style={{
-        boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.15)",
-        border: "1px solid rgba(255, 255, 255, 0.18)",
-      }}
     >
+      {/* Top Section: Avatar */}
       <div className="flex items-start justify-between">
-        {/* Avatar */}
-        <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-white/30 shadow-md">
+        <div className="h-14 w-14 overflow-hidden rounded-full border-2 border-white/30 shadow-lg">
           {profile.avatar_url ? (
             <img
               src={profile.avatar_url}
@@ -33,22 +31,26 @@ export function ProfileWidget({ profile, className }: ProfileWidgetProps) {
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gray-200 text-gray-400">
-              User
+            <div className="flex h-full w-full items-center justify-center bg-white/20 text-white text-xl font-bold">
+              {(profile.full_name || profile.username || "U").charAt(0).toUpperCase()}
             </div>
           )}
         </div>
-        
-        {/* Optional: Add a small icon or branding here if needed */}
       </div>
 
-      {/* Text Info */}
-      <div className="flex flex-col gap-1 text-white drop-shadow-md">
-        <h2 className="line-clamp-1 text-xl font-bold tracking-tight">
+      {/* Bottom Section: Text Info */}
+      <div className="flex flex-col gap-0.5">
+        <h2 
+          className="line-clamp-1 text-xl font-bold tracking-tight text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+          style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif' }}
+        >
           {profile.full_name || profile.username}
         </h2>
         {profile.bio && (
-          <p className="line-clamp-2 text-xs font-medium opacity-90">
+          <p 
+            className="line-clamp-2 text-xs font-medium text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+            style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif' }}
+          >
             {profile.bio}
           </p>
         )}

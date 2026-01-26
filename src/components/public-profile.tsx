@@ -155,21 +155,20 @@ export function PublicProfile({ username, serverProfile, serverLinks }: PublicPr
 
         {/* Dock Area - Fixed Bottom */}
         {dockLinks.length > 0 && (
-            <div className="absolute bottom-2 w-full px-4 mb-2">
-                 <Dock>
-                {dockLinks.map((link) => (
-                    <AppIcon
-                    key={link.id}
-                    id={link.id}
-                    title={link.title}
-                    iconUrl={link.icon_url}
-                    isJiggling={isJiggleMode}
-                    onLongPress={() => setIsJiggleMode(true)}
-                    onClick={() => !isJiggleMode && window.open(link.url, "_blank")}
-                    />
-                ))}
-                </Dock>
-            </div>
+            <Dock>
+              {dockLinks.map((link) => (
+                  <AppIcon
+                  key={link.id}
+                  id={link.id}
+                  title={link.title}
+                  iconUrl={link.icon_url}
+                  isJiggling={isJiggleMode}
+                  onLongPress={() => setIsJiggleMode(true)}
+                  onClick={() => !isJiggleMode && window.open(link.url, "_blank")}
+                  showLabel={false}
+                  />
+              ))}
+            </Dock>
         )}
       </div>
     </PhoneFrame>

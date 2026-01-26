@@ -2,30 +2,23 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { motion } from "framer-motion"
 
 interface DynamicIslandProps {
-  state?: "idle" | "active" | "expanded"
+  state: "idle" | "active" | "expanded"
+  className?: string
 }
 
-export function DynamicIsland({ state = "idle" }: DynamicIslandProps) {
+export function DynamicIsland({ state, className }: DynamicIslandProps) {
   return (
-    <motion.div
-      layout
-      transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 30,
-      }}
+    <div
       className={cn(
-        "flex items-center justify-between rounded-[22px] bg-black text-white",
-        state === "idle" && "h-[32px] w-[120px]", // 14 Pro standard pill
-        state === "active" && "h-[32px] w-[200px] px-2",
-        state === "expanded" && "h-[160px] w-[360px] rounded-[44px] p-6"
+        "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+        "liquid-glass-dark rounded-full",
+        state === "idle" && "h-[32px] w-[120px]",
+        state === "active" && "h-[36px] w-[140px]",
+        state === "expanded" && "h-[80px] w-[320px] rounded-[24px]",
+        className
       )}
-    >
-      {/* Selfie Camera Cutout (Always visible inside) */}
-      <div className="absolute right-[25%] top-[50%] h-3 w-3 -translate-y-1/2 rounded-full bg-[#1a1a1a]" />
-    </motion.div>
+    />
   )
 }
