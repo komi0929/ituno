@@ -3,8 +3,8 @@
 
 import { useLongPress } from "@/lib/hooks/use-long-press"
 import { cn } from "@/lib/utils"
-import { AnimatePresence, motion } from "framer-motion"
-import Image from "next/image"
+import { motion } from "framer-motion"
+import { X } from "lucide-react"; // Import X icon
 
 interface AppIconProps {
   id: string
@@ -13,18 +13,9 @@ interface AppIconProps {
   isJiggling?: boolean
   onClick?: () => void
   onLongPress?: () => void
-  onRemove?: () => void
+  onRemove?: () => void // New prop for removing icon
 }
 
-/**
- * AppIcon
- * 
- * Replicates iOS App Icon physics.
- * - Squircle shape (approx rounded-[22%])
- * - Spring animation on tap
- * - Jiggle animation (randomized rotation)
- * - Remove button in jiggle mode
- */
 export function AppIcon({
   id,
   title,
@@ -34,86 +25,60 @@ export function AppIcon({
   onLongPress,
   onRemove,
 }: AppIconProps) {
-  // Randomize start time of jiggle to avoid robotic sync
-  const jiggleDelay = Math.random() * -0.5
-
-  const longPressProps = useLongPress(() => {
-    onLongPress?.()
-  }, {
-    threshold: 500,
+  const longPressProps = useLongPress({
+    onLongPress: onLongPress || (() => {}),
+    onClick: onClick || (() => {}),
   })
-  
+
   return (
-    <div className="relative flex flex-col items-center gap-1">
-      {/* Remove Badge (Jiggle Mode Only) */}
-      <AnimatePresence>
+    <div className="relative flex flex-col items-center gap-1.5">
+      <motion.button
+        {...longPressProps}
+        whileTap={{ scale: isJiggling ? 1 : 0.88 }} // Native iOS click scale
+        animate={
+          isJiggling
+            ? {
+                rotate: [-2, 2, -2],
+                transition: {
+                  repeat: Infinity,
+                  duration: 0.25, // Fast jiggle
+                  ease: "easeInOut",
+                },
+              }
+            : {}
+        }
+        className={cn(
+          "relative h-[62px] w-[62px] overflow-hidden rounded-[14px] bg-zinc-800 shadow-sm transition-shadow", // iOS 18 Icon Size approx
+          "after:absolute after:inset-0 after:rounded-[14px] after:ring-1 after:ring-inset after:ring-white/10" // Inner stroke for depth
+        )}
+      >
+        {iconUrl ? (
+          <img src={iconUrl} alt={title} className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-700 to-gray-600 font-bold text-white text-xl">
+             {title.charAt(0).toUpperCase()}
+          </div>
+        )}
+
+        {/* Remove Button in Jiggle Mode */}
         {isJiggling && onRemove && (
-          <motion.button
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
+          <div
             onClick={(e) => {
               e.stopPropagation()
               onRemove()
             }}
-            className="absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full bg-gray-400 text-white shadow-sm backdrop-blur-sm dark:bg-gray-600"
+            className="absolute -left-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 shadow-md"
           >
-            <span className="h-[2px] w-3 bg-white" />
-          </motion.button>
+            <X className="h-3 w-3 text-black" />
+          </div>
         )}
-      </AnimatePresence>
-
-      <motion.button
-        layoutId={`icon-${id}`}
-        whileTap={{ scale: 0.88 }} // Classic iOS press depth
-        animate={
-          isJiggling
-            ? {
-                rotate: [-1.5, 1.5],
-                transition: {
-                  repeat: Infinity,
-                  repeatType: "mirror",
-                  duration: 0.25,
-                  ease: "easeInOut",
-                  delay: jiggleDelay,
-                },
-              }
-            : { rotate: 0 }
-        }
-        onTap={!isJiggling ? onClick : undefined}
-        {...longPressProps}
-        className="group relative"
-      >
-        <div className="relative h-[60px] w-[60px] overflow-hidden rounded-[14px] bg-white shadow-sm transition-shadow group-hover:shadow-md dark:bg-zinc-800 md:h-[68px] md:w-[68px] md:rounded-[16px]">
-          {iconUrl ? (
-            <Image
-              src={iconUrl}
-              alt={title}
-              fill
-              className="object-cover"
-              draggable={false}
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 dark:from-zinc-800 dark:to-zinc-900">
-               {/* Default Grid Pattern */}
-               <div className="grid grid-cols-2 gap-1 opacity-20">
-                 <div className="h-4 w-4 rounded-sm bg-black dark:bg-white" />
-                 <div className="h-4 w-4 rounded-sm bg-black dark:bg-white" />
-                 <div className="h-4 w-4 rounded-sm bg-black dark:bg-white" />
-                 <div className="h-4 w-4 rounded-sm bg-black dark:bg-white" />
-               </div>
-            </div>
-          )}
-          {/* Shine effect (subtle) */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/0 via-white/5 to-white/10 opacity-50" />
-        </div>
       </motion.button>
-
-      {/* Label */}
-      <span className={cn(
-        "max-w-[70px] truncate text-center text-[11px] font-medium leading-none tracking-tight text-white drop-shadow-md md:text-[12px]",
-        isJiggling && "animate-pulse" // Subtle hint that labels can change
-      )}>
+      
+      {/* Icon Label */}
+      <span 
+        className="w-[70px] truncate text-center text-[11px] font-medium leading-tight text-white drop-shadow-md select-none"
+        style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}
+      >
         {title}
       </span>
     </div>

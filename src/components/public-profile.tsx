@@ -5,6 +5,7 @@ import { AppIcon } from "@/components/ios/AppIcon"
 import { Dock } from "@/components/ios/Dock"
 import { DynamicIsland } from "@/components/ios/DynamicIsland"
 import { PhoneFrame } from "@/components/ios/PhoneFrame"
+import { ProfileWidget } from "@/components/ios/ProfileWidget"
 import { SortableAppIcon } from "@/components/ios/SortableAppIcon"
 import { StatusBar } from "@/components/ios/StatusBar"
 import { Database } from "@/lib/types/schema"
@@ -61,6 +62,8 @@ export function PublicProfile({ username, serverProfile, serverLinks }: PublicPr
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string)
+    // Haptic feedback could go here
+    if (navigator.vibrate) navigator.vibrate(10)
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -88,89 +91,87 @@ export function PublicProfile({ username, serverProfile, serverLinks }: PublicPr
   return (
     <PhoneFrame>
       <div 
-        className="relative h-full w-full bg-cover bg-center"
+        className="relative h-full min-h-screen w-full bg-cover bg-center"
         style={{ backgroundImage: `url(${wallpaper})` }}
         onClick={handleWallpaperClick}
       >
-        <StatusBar />
-
-        <div className="flex w-full justify-center pt-2">
-           <DynamicIsland state={activeId ? "active" : "idle"} />
+        {/* Status Bar */}
+        <Status barWrapperClassName="pt-1 px-6" /> {/* Adjusted for no-bezel */}
+        <div className="absolute top-0 w-full px-6 pt-3 z-50 pointer-events-none">
+             <StatusBar />
         </div>
 
-        {/* Profile Info */}
-        {serverProfile.full_name && (
-          <div className="mt-4 flex flex-col items-center gap-2 px-4">
-            {serverProfile.avatar_url && (
-              <img
-                src={serverProfile.avatar_url}
-                alt={serverProfile.full_name}
-                className="h-16 w-16 rounded-full border-2 border-white/20 object-cover shadow-lg"
-              />
-            )}
-            <h2 className="text-lg font-semibold text-white drop-shadow-md">
-              {serverProfile.full_name}
-            </h2>
-            {serverProfile.bio && (
-              <p className="text-center text-sm text-white/80 drop-shadow-md">
-                {serverProfile.bio}
-              </p>
-            )}
-          </div>
+        {/* Dynamic Island - integrated, not in bezel */}
+        <div className="absolute top-0 flex w-full justify-center pt-3 z-50 pointer-events-none">
+           <div className="pointer-events-auto">
+             <DynamicIsland state={activeId ? "active" : "idle"} />
+           </div>
+        </div>
+
+        {/* Main Content Padding for Status Bar & Island */}
+        <div className="pt-14 pb-24 px-6 flex flex-col gap-8">
+            
+            {/* Profile Widget (Top Widget) */}
+            <div className="w-full">
+                <ProfileWidget profile={serverProfile} />
+            </div>
+
+            <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            >
+            <div className="grid grid-cols-4 gap-x-5 gap-y-6"> {/* Tuned spacing */}
+                <SortableContext items={gridLinks} strategy={rectSortingStrategy}>
+                {gridLinks.map((link) => (
+                    <SortableAppIcon
+                    key={link.id}
+                    id={link.id}
+                    title={link.title}
+                    iconUrl={link.icon_url}
+                    isJiggling={isJiggleMode}
+                    onLongPress={() => setIsJiggleMode(true)}
+                    onClick={() => !isJiggleMode && window.open(link.url, "_blank")}
+                    onRemove={() => console.log("Remove", link.id)}
+                    />
+                ))}
+                </SortableContext>
+            </div>
+
+            <DragOverlay>
+                {activeItem ? (
+                <div className="scale-110 opacity-90">
+                    <AppIcon
+                    id={activeItem.id}
+                    title={activeItem.title}
+                    iconUrl={activeItem.icon_url}
+                    isJiggling={true}
+                    />
+                </div>
+                ) : null}
+            </DragOverlay>
+            </DndContext>
+        </div>
+
+        {/* Dock Area - Fixed Bottom */}
+        {dockLinks.length > 0 && (
+            <div className="absolute bottom-2 w-full px-4 mb-2">
+                 <Dock>
+                {dockLinks.map((link) => (
+                    <AppIcon
+                    key={link.id}
+                    id={link.id}
+                    title={link.title}
+                    iconUrl={link.icon_url}
+                    isJiggling={isJiggleMode}
+                    onLongPress={() => setIsJiggleMode(true)}
+                    onClick={() => !isJiggleMode && window.open(link.url, "_blank")}
+                    />
+                ))}
+                </Dock>
+            </div>
         )}
-
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-        >
-          <div className="mt-6 grid grid-cols-4 gap-x-4 gap-y-6 px-4">
-            <SortableContext items={gridLinks} strategy={rectSortingStrategy}>
-              {gridLinks.map((link) => (
-                <SortableAppIcon
-                  key={link.id}
-                  id={link.id}
-                  title={link.title}
-                  iconUrl={link.icon_url}
-                  isJiggling={isJiggleMode}
-                  onLongPress={() => setIsJiggleMode(true)}
-                  onClick={() => !isJiggleMode && window.open(link.url, "_blank")}
-                  onRemove={() => console.log("Remove", link.id)}
-                />
-              ))}
-            </SortableContext>
-          </div>
-
-          {dockLinks.length > 0 && (
-            <Dock>
-              {dockLinks.map((link) => (
-                <AppIcon
-                  key={link.id}
-                  id={link.id}
-                  title={link.title}
-                  iconUrl={link.icon_url}
-                  isJiggling={isJiggleMode}
-                  onLongPress={() => setIsJiggleMode(true)}
-                  onClick={() => !isJiggleMode && window.open(link.url, "_blank")}
-                />
-              ))}
-            </Dock>
-          )}
-
-          <DragOverlay>
-            {activeItem ? (
-              <div className="opacity-80">
-                <AppIcon
-                  id={activeItem.id}
-                  title={activeItem.title}
-                  iconUrl={activeItem.icon_url}
-                  isJiggling={true}
-                />
-              </div>
-            ) : null}
-          </DragOverlay>
-        </DndContext>
       </div>
     </PhoneFrame>
   )

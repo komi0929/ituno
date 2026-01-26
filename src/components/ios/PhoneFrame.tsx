@@ -9,32 +9,30 @@ interface PhoneFrameProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * PhoneFrame
+ * PhoneFrame - Immersive Redesign
  * 
- * Renders an iPhone 15/16 Pro style bezel on desktop,
- * and a full-screen view on mobile.
+ * - Mobile: 100% Fullscreen, no borders.
+ * - Desktop: Centered content max-width, full-height, no fake bezel.
+ *   The background should be applied to the inner container or passed down.
  */
 export function PhoneFrame({ children, className, ...props }: PhoneFrameProps) {
   return (
-    <div className={cn("relative flex h-full w-full justify-center overflow-hidden bg-gray-100 dark:bg-zinc-900 md:items-center md:py-8", className)} {...props}>
-      {/* Mobile Wrapper (Bezel hidden on mobile via CSS/Structure, but effectively fullscreen) */}
-      <div className="relative h-full w-full overflow-hidden bg-background md:h-[852px] md:w-[393px] md:rounded-[55px] md:border-[8px] md:border-zinc-900 md:shadow-2xl">
+    <div className={cn("relative flex h-full min-h-screen w-full justify-center overflow-hidden bg-black", className)} {...props}>
+      {/* Content Container */}
+      <div className="relative h-full min-h-screen w-full max-w-[430px] overflow-hidden bg-background shadow-2xl">
         
-        {/* Dynamic Island Area (Placeholder for absolute positioning context) */}
-        <div className="pointer-events-none absolute top-0 z-50 flex w-full justify-center pt-2">
-           {/* Dynamic Island component will go here */}
+        {/* Dynamic Island Context (Absolute top centered) */}
+        <div className="pointer-events-none absolute top-0 z-50 flex w-full justify-center pt-3">
+           {/* Dynamic Island component will be injected here by children if needed, 
+               or handled inside the page. This is just for structural consistency if we added a slot later.
+               For now, we let children handle the absolute positioning of the island. */}
         </div>
         
-        {/* Screen Content */}
+        {/* Main Content Area */}
         <div className="h-full w-full overflow-y-auto overflow-x-hidden scrollbar-hide">
           {children}
         </div>
 
-        {/* Hardware Buttons (Decorative, Desktop Only) */}
-        <div className="absolute -left-[10px] top-24 hidden h-8 w-[3px] rounded-l-md bg-zinc-800 md:block" /> {/* Action Button */}
-        <div className="absolute -left-[10px] top-36 hidden h-16 w-[3px] rounded-l-md bg-zinc-800 md:block" /> {/* Volume Up */}
-        <div className="absolute -left-[10px] top-56 hidden h-16 w-[3px] rounded-l-md bg-zinc-800 md:block" /> {/* Volume Down */}
-        <div className="absolute -right-[10px] top-44 hidden h-24 w-[3px] rounded-r-md bg-zinc-800 md:block" /> {/* Power */}
       </div>
     </div>
   )
