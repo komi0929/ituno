@@ -7,7 +7,7 @@ export async function createClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  // Return null client for demo mode
+  // Return null for demo mode - pages handle this case
   if (!supabaseUrl || !supabaseAnonKey) {
     return null
   }
