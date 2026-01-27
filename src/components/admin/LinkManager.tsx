@@ -1,42 +1,41 @@
+"use client";
 
-"use client"
-
-import { createClient } from "@/lib/supabase/client"
-import { Database } from "@/lib/types/schema"
-import { getAppIconUrl } from "@/lib/utils/app-icons"
+import { createClient } from "@/lib/supabase/client";
+import { Database } from "@/lib/types/schema";
+import { getAppIconUrl } from "@/lib/utils/app-icons";
 import {
-    closestCenter,
-    DndContext,
-    DragEndEvent,
-    KeyboardSensor,
-    PointerSensor,
-    useSensor,
-    useSensors,
-} from "@dnd-kit/core"
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
-    arrayMove,
-    SortableContext,
-    sortableKeyboardCoordinates,
-    useSortable,
-    verticalListSortingStrategy,
-} from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
-import { GripVertical, Loader2, Plus, Trash2 } from "lucide-react"
-import { useState } from "react"
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical, Loader2, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
 
-type Link = Database["public"]["Tables"]["links"]["Row"]
-type LinkInsert = Database["public"]["Tables"]["links"]["Insert"]
+type Link = Database["public"]["Tables"]["links"]["Row"];
+type LinkInsert = Database["public"]["Tables"]["links"]["Insert"];
 
 interface LinkManagerProps {
-  userId: string
-  links: Link[]
-  onLinksChange: (links: Link[]) => void
+  userId: string;
+  links: Link[];
+  onLinksChange: (links: Link[]) => void;
 }
 
 interface SortableLinkItemProps {
-  link: Link
-  onUpdate: (id: string, updates: Partial<Link>) => void
-  onDelete: (id: string) => void
+  link: Link;
+  onUpdate: (id: string, updates: Partial<Link>) => void;
+  onDelete: (id: string) => void;
 }
 
 function SortableLinkItem({ link, onUpdate, onDelete }: SortableLinkItemProps) {
@@ -47,13 +46,13 @@ function SortableLinkItem({ link, onUpdate, onDelete }: SortableLinkItemProps) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: link.id })
+  } = useSortable({ id: link.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-  }
+  };
 
   return (
     <div
@@ -89,11 +88,29 @@ function SortableLinkItem({ link, onUpdate, onDelete }: SortableLinkItemProps) {
           type="url"
           value={link.url}
           onChange={(e) => {
-            const url = e.target.value
+            const url = e.target.value;
             onUpdate(link.id, {
               url,
+              // Immediate local update for icon (optimistic)
               icon_url: getAppIconUrl(url),
-            })
+            });
+          }}
+          onBlur={async (e) => {
+            const url = e.target.value;
+            if (!url) return;
+
+            // Only fetch if title is empty or default "新しいリンク"
+            if (!link.title || link.title === "新しいリンク") {
+              const { fetchUrlMetadata } = await import("@/app/admin/actions");
+              const metadata = await fetchUrlMetadata(url);
+              if (metadata?.title) {
+                onUpdate(link.id, {
+                  title: metadata.title,
+                  // Update icon again just in case (though getAppIconUrl is consistent)
+                  icon_url: metadata.icon_url,
+                });
+              }
+            }
           }}
           className="w-full rounded border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-sm text-white focus:border-blue-500 focus:outline-none"
           placeholder="https://..."
@@ -118,22 +135,26 @@ function SortableLinkItem({ link, onUpdate, onDelete }: SortableLinkItemProps) {
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-export function LinkManager({ userId, links, onLinksChange }: LinkManagerProps) {
-  const [isAdding, setIsAdding] = useState(false)
-  const supabase = createClient()
+export function LinkManager({
+  userId,
+  links,
+  onLinksChange,
+}: LinkManagerProps) {
+  const [isAdding, setIsAdding] = useState(false);
+  const supabase = createClient();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
-  )
+    }),
+  );
 
   const handleAddLink = async () => {
-    setIsAdding(true)
+    setIsAdding(true);
     try {
       const newLink: LinkInsert = {
         user_id: userId,
@@ -142,56 +163,58 @@ export function LinkManager({ userId, links, onLinksChange }: LinkManagerProps) 
         icon_url: getAppIconUrl("https://example.com"),
         is_docked: false,
         sort_order: links.length,
-      }
+      };
 
       const { data, error } = await supabase
         .from("links")
         .insert(newLink as any)
         .select()
-        .single()
+        .single();
 
-      if (error) throw error
-      if (data) onLinksChange([...links, data as Link])
+      if (error) throw error;
+      if (data) onLinksChange([...links, data as Link]);
     } catch (err) {
-      console.error("Failed to add link:", err)
+      console.error("Failed to add link:", err);
     } finally {
-      setIsAdding(false)
+      setIsAdding(false);
     }
-  }
+  };
 
   const handleUpdateLink = async (id: string, updates: Partial<Link>) => {
     // Optimistic update
-    onLinksChange(links.map((l) => (l.id === id ? { ...l, ...updates } : l)))
+    onLinksChange(links.map((l) => (l.id === id ? { ...l, ...updates } : l)));
 
     // Persist to DB
-    await (supabase.from("links") as any).update(updates).eq("id", id)
-  }
+    await (supabase.from("links") as any).update(updates).eq("id", id);
+  };
 
   const handleDeleteLink = async (id: string) => {
     // Optimistic update
-    onLinksChange(links.filter((l) => l.id !== id))
+    onLinksChange(links.filter((l) => l.id !== id));
 
     // Persist to DB
-    await (supabase.from("links") as any).delete().eq("id", id)
-  }
+    await (supabase.from("links") as any).delete().eq("id", id);
+  };
 
   const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event
+    const { active, over } = event;
     if (active.id !== over?.id) {
-      const oldIndex = links.findIndex((l) => l.id === active.id)
-      const newIndex = links.findIndex((l) => l.id === over?.id)
+      const oldIndex = links.findIndex((l) => l.id === active.id);
+      const newIndex = links.findIndex((l) => l.id === over?.id);
       const newLinks = arrayMove(links, oldIndex, newIndex).map((l, i) => ({
         ...l,
         sort_order: i,
-      }))
-      onLinksChange(newLinks)
+      }));
+      onLinksChange(newLinks);
 
       // Batch update sort_order in DB
       for (const link of newLinks) {
-        await (supabase.from("links") as any).update({ sort_order: link.sort_order }).eq("id", link.id)
+        await (supabase.from("links") as any)
+          .update({ sort_order: link.sort_order })
+          .eq("id", link.id);
       }
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -236,5 +259,5 @@ export function LinkManager({ userId, links, onLinksChange }: LinkManagerProps) 
         </div>
       )}
     </div>
-  )
+  );
 }
