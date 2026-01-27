@@ -3,7 +3,7 @@
 
 import { createClient } from "@/lib/supabase/client"
 import { Database } from "@/lib/types/schema"
-import { getFaviconUrl } from "@/lib/utils/favicon"
+import { getAppIconUrl } from "@/lib/utils/app-icons"
 import {
     closestCenter,
     DndContext,
@@ -92,7 +92,7 @@ function SortableLinkItem({ link, onUpdate, onDelete }: SortableLinkItemProps) {
             const url = e.target.value
             onUpdate(link.id, {
               url,
-              icon_url: getFaviconUrl(url),
+              icon_url: getAppIconUrl(url),
             })
           }}
           className="w-full rounded border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-sm text-white focus:border-blue-500 focus:outline-none"
@@ -139,7 +139,7 @@ export function LinkManager({ userId, links, onLinksChange }: LinkManagerProps) 
         user_id: userId,
         title: "新しいリンク",
         url: "https://example.com",
-        icon_url: getFaviconUrl("https://example.com"),
+        icon_url: getAppIconUrl("https://example.com"),
         is_docked: false,
         sort_order: links.length,
       }
