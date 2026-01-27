@@ -1,6 +1,7 @@
 "use server";
 
 import { getAppIconUrl } from "@/lib/utils/app-icons";
+import { getOfficialAppIcon, searchAppIcon } from "@/lib/utils/itunes-api";
 
 export async function fetchUrlMetadata(url: string) {
   if (!url) return null;
@@ -25,7 +26,7 @@ export async function fetchUrlMetadata(url: string) {
       signal: controller.signal,
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (compatible; itone-bot/1.0; +http://itone-six.vercel.app)",
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
       },
     });
     clearTimeout(timeoutId);
@@ -39,43 +40,39 @@ export async function fetchUrlMetadata(url: string) {
     const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
     if (titleMatch) title = titleMatch[1].trim();
 
-    // Icon Strategy:
-    // 1. Check known high-quality cache first (iTunes)
-    const { hasHighQualityIcon } = await import("@/lib/utils/app-icons");
-    if (hasHighQualityIcon(url)) {
-      return { title, icon_url: getAppIconUrl(url) };
-    }
+    // Clean up title (remove common suffixes)
+    title = title.split(/[-|] /)[0].trim();
 
-    // 2. Try scraping HTML for icons (better for specific local sites like Saizeriya)
-    // Priority: apple-touch-icon > icon > shortcut icon
-    let scraptedIcon = "";
-    const iconRegex =
-      /<link[^>]*rel=["'](apple-touch-icon|icon|shortcut icon)["'][^>]*href=["']([^"']+)["'][^>]*>/gi;
-    let match;
-    while ((match = iconRegex.exec(html)) !== null) {
-      const rel = match[1].toLowerCase();
-      const href = match[2];
+    // === ICON STRATEGY (STRICT: Official Icons Only) ===
 
-      // Prefer apple-touch-icon
-      if (rel === "apple-touch-icon") {
-        scraptedIcon = href;
-        break;
-      }
-      // Take first icon found if we don't have one yet
-      if (!scraptedIcon) scraptedIcon = href;
+    // 1. Try to guess App Name from title or URL
+    // e.g. "GitHub" -> search iTunes API
+    let potentialAppName = title;
+    if (!potentialAppName) {
+      try {
+        potentialAppName = new URL(url).hostname
+          .replace("www.", "")
+          .split(".")[0];
+      } catch {}
     }
 
     let finalIconUrl = "";
-    if (scraptedIcon) {
-      // Resolve relative URL
-      try {
-        finalIconUrl = new URL(scraptedIcon, url).toString();
-      } catch {
-        finalIconUrl = "";
+
+    // 2. Search iTunes API for official icon
+    if (potentialAppName) {
+      const officialIcon = getOfficialAppIcon(potentialAppName);
+      if (officialIcon) {
+        finalIconUrl = officialIcon;
+      } else {
+        // Search iTunes API
+        const searchedIcon = await searchAppIcon(potentialAppName);
+        if (searchedIcon) {
+          finalIconUrl = searchedIcon;
+        }
       }
     }
 
-    // 3. Fallback to Clearbit/Google service
+    // 3. Fallback: Use getAppIconUrl (checks cached official list or favicon)
     if (!finalIconUrl) {
       finalIconUrl = getAppIconUrl(url);
     }
