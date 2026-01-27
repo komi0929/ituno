@@ -46,21 +46,29 @@ interface PublicProfileProps {
   serverLinks: Link[];
 }
 
+interface ThemeConfig {
+  wallpaper?: string;
+  textColor?: string;
+}
+
 /**
  * iOS Home Screen - Pixel-Perfect Reproduction
  * Based on exact analysis of reference screenshot
  */
 export function PublicProfile({
-  username,
   serverProfile,
   serverLinks,
-}: PublicProfileProps) {
+}: Omit<PublicProfileProps, "username">) {
   const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => setIsMounted(true), []);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const [links, setLinks] = useState(serverLinks);
   const [isJiggleMode, setIsJiggleMode] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
+
+  const themeConfig = serverProfile.theme_config as unknown as ThemeConfig;
 
   const gridLinks = links
     .filter((l) => !l.is_docked)
@@ -116,11 +124,11 @@ export function PublicProfile({
         onClick={handleBackgroundClick}
       >
         {/* Wallpaper Layer */}
-        {serverProfile.theme_config?.wallpaper && (
+        {themeConfig?.wallpaper && (
           <div
             className="absolute inset-0 z-0"
             style={{
-              backgroundImage: `url(${serverProfile.theme_config.wallpaper})`,
+              backgroundImage: `url(${themeConfig.wallpaper})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
