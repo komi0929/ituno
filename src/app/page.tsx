@@ -1,5 +1,4 @@
-
-import Link from "next/link"
+import Link from "next/link";
 
 export default function HomePage() {
   return (
@@ -31,9 +30,20 @@ export default function HomePage() {
         </Link>
       </div>
 
-      <footer className="absolute bottom-8 text-sm text-zinc-600">
-        Built with Next.js 16 + Supabase + Tailwind CSS
+      <footer className="absolute bottom-8 flex flex-col items-center gap-4 text-sm text-zinc-600">
+        <div className="flex gap-6">
+          <Link href="/terms" className="hover:text-zinc-400 transition-colors">
+            利用規約
+          </Link>
+          <Link
+            href="/privacy"
+            className="hover:text-zinc-400 transition-colors"
+          >
+            プライバシーポリシー
+          </Link>
+        </div>
+        <p>Built with Next.js 16 + Supabase + Tailwind CSS</p>
       </footer>
     </div>
-  )
+  );
 }

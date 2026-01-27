@@ -4,6 +4,7 @@ import { AppIcon, DockIcon } from "@/components/ios/AppIcon";
 import { Dock } from "@/components/ios/Dock";
 import { DynamicIsland } from "@/components/ios/DynamicIsland";
 import { SortableAppIcon } from "@/components/ios/SortableAppIcon";
+import { SquircleDefs } from "@/components/ios/SquircleDefs";
 import {
   GRID_COLUMN_WIDTH,
   GRID_HORIZONTAL_PADDING,
@@ -166,6 +167,7 @@ export function PublicProfile({
 
           {/* Dynamic Island */}
           <DynamicIsland />
+          <SquircleDefs />
 
           {/* Status Bar - White text on wallpaper */}
           <div

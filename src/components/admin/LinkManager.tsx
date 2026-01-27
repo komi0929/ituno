@@ -113,7 +113,7 @@ function SortableLinkItem({ link, onUpdate, onDelete }: SortableLinkItemProps) {
             type="text"
             value={link.title}
             onChange={(e) => onUpdate(link.id, { title: e.target.value })}
-            className="w-full bg-transparent text-sm font-medium text-white placeholder-zinc-500 focus:outline-none"
+            className="w-full bg-transparent text-base lg:text-sm font-medium text-white placeholder-zinc-500 focus:outline-none"
             placeholder="サイトのタイトル..."
           />
         </div>
@@ -131,7 +131,7 @@ function SortableLinkItem({ link, onUpdate, onDelete }: SortableLinkItemProps) {
               });
             }}
             onBlur={handleUrlBlur}
-            className="w-full bg-transparent text-sm text-blue-400 placeholder-zinc-600 focus:outline-none"
+            className="w-full bg-transparent text-base lg:text-sm text-blue-400 placeholder-zinc-600 focus:outline-none"
             placeholder="https://example.com"
           />
         </div>
@@ -260,7 +260,7 @@ export function LinkManager({
         <button
           onClick={handleAddLink}
           disabled={isAdding}
-          className="flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-blue-500 hover:shadow-lg disabled:opacity-50"
+          className="flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 lg:px-4 lg:py-2 text-base lg:text-sm font-medium text-white transition-all hover:bg-blue-500 hover:shadow-lg disabled:opacity-50"
         >
           {isAdding ? (
             <Loader2 className="h-4 w-4 animate-spin" />

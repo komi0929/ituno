@@ -4,6 +4,7 @@ import { AppIcon } from "@/components/ios/AppIcon";
 import { Dock } from "@/components/ios/Dock";
 import { DynamicIsland } from "@/components/ios/DynamicIsland";
 import { PhoneFrame } from "@/components/ios/PhoneFrame";
+import { SquircleDefs } from "@/components/ios/SquircleDefs";
 import { StatusBar } from "@/components/ios/StatusBar";
 import { Database } from "@/lib/types/schema";
 
@@ -35,6 +36,7 @@ export function LivePreview({ profile, links }: LivePreviewProps) {
       >
         {/* Status Bar */}
         <StatusBar />
+        <SquircleDefs />
 
         {/* Dynamic Island */}
         <div className="flex w-full justify-center pt-2">

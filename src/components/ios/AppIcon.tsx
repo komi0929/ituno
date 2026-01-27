@@ -2,7 +2,6 @@
 
 import { useLongPress } from "@/lib/hooks/use-long-press";
 import {
-  ICON_RADIUS,
   ICON_SIZE,
   LABEL_COLOR,
   LABEL_FONT_SIZE,
@@ -60,9 +59,14 @@ export function AppIcon({
           style={{
             width: ICON_SIZE,
             height: ICON_SIZE,
-            borderRadius: ICON_RADIUS,
-            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.2)",
-            overflow: "hidden",
+            // iOS Squircle Clip Path
+            clipPath: "url(#ios-squircle)",
+            WebkitClipPath: "url(#ios-squircle)",
+            // Shadow needs to be on a parent or handled differently if clip-path cuts it off.
+            // But for now, let's keep it simple. If clip-path cuts shadow, we need a wrapper.
+            // Actually, for iOS icons, the shadow is usually outside the mask.
+            // Let's rely on the parent for shadow or use drop-shadow filter on this element.
+            filter: "drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2))",
           }}
         >
           {iconUrl ? (
@@ -166,9 +170,9 @@ export function DockIcon({
         style={{
           width: ICON_SIZE,
           height: ICON_SIZE,
-          borderRadius: ICON_RADIUS,
-          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.2)",
-          overflow: "hidden",
+          clipPath: "url(#ios-squircle)",
+          WebkitClipPath: "url(#ios-squircle)",
+          filter: "drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2))",
         }}
       >
         {iconUrl ? (

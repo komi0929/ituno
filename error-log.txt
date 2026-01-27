@@ -1,0 +1,31 @@
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator:  locator('.bg-zinc-950').locator('img[src*=\'mzstatic.com\']')
+Expected: visible
+Received: hidden
+Timeout:  5000ms
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 5000ms[22m
+[2m  - waiting for locator('.bg-zinc-950').locator('img[src*=\'mzstatic.com\']')[22m
+[2m    4 × locator resolved to <img alt="新しいリンク" draggable="false" crossorigin="anonymous" referrerpolicy="no-referrer" class="absolute inset-0 h-full w-full object-cover" src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/11/4c/30/114c3009-76b0-76a0-aac0-7ebe97c16a58/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg"/>[22m
+[2m      - unexpected value "hidden"[22m
+[2m    5 × locator resolved to <img alt="GitHub" draggable="false" crossorigin="anonymous" referrerpolicy="no-referrer" class="absolute inset-0 h-full w-full object-cover" src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/11/4c/30/114c3009-76b0-76a0-aac0-7ebe97c16a58/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg"/>[22m
+[2m      - unexpected value "hidden"[22m
+
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator:  locator('.bg-zinc-950').locator('img[src*=\'mzstatic.com\']')
+Expected: visible
+Received: hidden
+Timeout:  5000ms
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 5000ms[22m
+[2m  - waiting for locator('.bg-zinc-950').locator('img[src*=\'mzstatic.com\']')[22m
+[2m    4 × locator resolved to <img alt="新しいリンク" draggable="false" crossorigin="anonymous" referrerpolicy="no-referrer" class="absolute inset-0 h-full w-full object-cover" src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/11/4c/30/114c3009-76b0-76a0-aac0-7ebe97c16a58/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg"/>[22m
+[2m      - unexpected value "hidden"[22m
+[2m    5 × locator resolved to <img alt="GitHub" draggable="false" crossorigin="anonymous" referrerpolicy="no-referrer" class="absolute inset-0 h-full w-full object-cover" src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/11/4c/30/114c3009-76b0-76a0-aac0-7ebe97c16a58/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg"/>[22m
+[2m      - unexpected value "hidden"[22m
+
+    at C:\Users\hisak\OneDrive\デスクトップ\itone\e2e\ios-fidelity.spec.ts:114:28
