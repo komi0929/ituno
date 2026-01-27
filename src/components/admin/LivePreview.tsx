@@ -1,26 +1,31 @@
+"use client";
 
-"use client"
+import { AppIcon } from "@/components/ios/AppIcon";
+import { Dock } from "@/components/ios/Dock";
+import { DynamicIsland } from "@/components/ios/DynamicIsland";
+import { PhoneFrame } from "@/components/ios/PhoneFrame";
+import { StatusBar } from "@/components/ios/StatusBar";
+import { Database } from "@/lib/types/schema";
 
-import { AppIcon } from "@/components/ios/AppIcon"
-import { Dock } from "@/components/ios/Dock"
-import { DynamicIsland } from "@/components/ios/DynamicIsland"
-import { PhoneFrame } from "@/components/ios/PhoneFrame"
-import { StatusBar } from "@/components/ios/StatusBar"
-import { Database } from "@/lib/types/schema"
-
-type Profile = Database["public"]["Tables"]["profiles"]["Row"]
-type Link = Database["public"]["Tables"]["links"]["Row"]
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+type Link = Database["public"]["Tables"]["links"]["Row"];
 
 interface LivePreviewProps {
-  profile: Profile | null
-  links: Link[]
+  profile: Profile | null;
+  links: Link[];
 }
 
 export function LivePreview({ profile, links }: LivePreviewProps) {
-  const gridLinks = links.filter((l) => !l.is_docked).sort((a, b) => a.sort_order - b.sort_order)
-  const dockLinks = links.filter((l) => l.is_docked).sort((a, b) => a.sort_order - b.sort_order)
+  const gridLinks = links
+    .filter((l) => !l.is_docked)
+    .sort((a, b) => a.sort_order - b.sort_order);
+  const dockLinks = links
+    .filter((l) => l.is_docked)
+    .sort((a, b) => a.sort_order - b.sort_order);
 
-  const wallpaper = (profile?.theme_config as any)?.wallpaper || "https://images.unsplash.com/photo-1695503348386-2a7444c979d5?q=80&w=2670"
+  const wallpaper =
+    (profile?.theme_config as any)?.wallpaper ||
+    "https://images.unsplash.com/photo-1695503348386-2a7444c979d5?q=80&w=2670";
 
   return (
     <PhoneFrame>
@@ -33,7 +38,7 @@ export function LivePreview({ profile, links }: LivePreviewProps) {
 
         {/* Dynamic Island */}
         <div className="flex w-full justify-center pt-2">
-          <DynamicIsland state="idle" />
+          <DynamicIsland />
         </div>
 
         {/* Profile Info (Optional) */}
@@ -84,5 +89,5 @@ export function LivePreview({ profile, links }: LivePreviewProps) {
         )}
       </div>
     </PhoneFrame>
-  )
+  );
 }

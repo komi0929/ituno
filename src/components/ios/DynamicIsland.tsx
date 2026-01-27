@@ -1,24 +1,28 @@
+"use client";
 
-"use client"
+import {
+  DYNAMIC_ISLAND_HEIGHT,
+  DYNAMIC_ISLAND_RADIUS,
+  DYNAMIC_ISLAND_TOP,
+  DYNAMIC_ISLAND_WIDTH,
+} from "@/lib/ios-constants";
 
-import { cn } from "@/lib/utils"
-
-interface DynamicIslandProps {
-  state: "idle" | "active" | "expanded"
-  className?: string
-}
-
-export function DynamicIsland({ state, className }: DynamicIslandProps) {
+/**
+ * Dynamic Island - iPhone 14 Pro+ style
+ * Pixel-perfect reproduction of Apple's Dynamic Island
+ */
+export function DynamicIsland() {
   return (
     <div
-      className={cn(
-        "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
-        "liquid-glass-dark rounded-full",
-        state === "idle" && "h-[32px] w-[120px]",
-        state === "active" && "h-[36px] w-[140px]",
-        state === "expanded" && "h-[80px] w-[320px] rounded-[24px]",
-        className
-      )}
+      className="absolute left-1/2 z-50"
+      style={{
+        top: DYNAMIC_ISLAND_TOP,
+        transform: "translateX(-50%)",
+        width: DYNAMIC_ISLAND_WIDTH,
+        height: DYNAMIC_ISLAND_HEIGHT,
+        backgroundColor: "#000000",
+        borderRadius: DYNAMIC_ISLAND_RADIUS,
+      }}
     />
-  )
+  );
 }

@@ -2,18 +2,24 @@
 
 import { AppIcon, DockIcon } from "@/components/ios/AppIcon";
 import { Dock } from "@/components/ios/Dock";
+import { DynamicIsland } from "@/components/ios/DynamicIsland";
 import { SortableAppIcon } from "@/components/ios/SortableAppIcon";
 import {
   GRID_COLUMN_WIDTH,
   GRID_HORIZONTAL_PADDING,
   GRID_ROW_HEIGHT,
   GRID_TOP_OFFSET,
+  HOME_INDICATOR_BOTTOM,
+  HOME_INDICATOR_HEIGHT,
+  HOME_INDICATOR_RADIUS,
+  HOME_INDICATOR_WIDTH,
   JIGGLE_KEYFRAMES,
   PAGE_DOT_ACTIVE_COLOR,
   PAGE_DOT_GAP,
   PAGE_DOT_INACTIVE_COLOR,
   PAGE_DOT_SIZE,
   PAGE_DOTS_BOTTOM,
+  SCREEN_CORNER_RADIUS,
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
   STATUS_BAR_HEIGHT,
@@ -54,12 +60,15 @@ interface ThemeConfig {
 }
 
 /**
- * iOS Home Screen - Pixel-Perfect Reproduction
- * Matches the reference image exactly:
- * - Status bar with time, location arrow, signal, WiFi, battery (white on wallpaper)
- * - 4-column grid with white labels and drop shadows
- * - Page dots above dock
- * - Frosted glass dock
+ * iPhone 17 Pixel-Perfect Home Screen
+ *
+ * Specifications (from Apple iPhone 17):
+ * - Screen: 393×852 pt (6.3 inch, 2622×1206 @ 460ppi)
+ * - Dynamic Island: 126×37 px
+ * - ProMotion 120Hz display
+ *
+ * CRITICAL: Uses OFFICIAL iOS app icons from Apple CDN only.
+ * Generic icons (icons8, flaticon, etc.) are STRICTLY PROHIBITED.
  */
 export function PublicProfile({
   serverProfile,
@@ -129,7 +138,7 @@ export function PublicProfile({
 
       {/* Full screen container - black letterbox on desktop */}
       <div className="flex min-h-[100dvh] w-full items-center justify-center bg-black">
-        {/* Phone Screen - iPhone aspect ratio */}
+        {/* Phone Screen - iPhone 17 aspect ratio with rounded corners */}
         <div
           className="relative overflow-hidden"
           style={{
@@ -137,11 +146,12 @@ export function PublicProfile({
             height: SCREEN_HEIGHT,
             maxWidth: "100vw",
             maxHeight: "100dvh",
-            backgroundColor: "#1C1C1E", // Fallback dark gray
+            backgroundColor: "#1C1C1E",
+            borderRadius: SCREEN_CORNER_RADIUS,
           }}
           onClick={handleBackgroundClick}
         >
-          {/* Wallpaper Layer - fills entire screen */}
+          {/* Wallpaper Layer */}
           {themeConfig?.wallpaper && (
             <div
               className="absolute inset-0 z-0"
@@ -149,16 +159,20 @@ export function PublicProfile({
                 backgroundImage: `url(${themeConfig.wallpaper})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
+                borderRadius: SCREEN_CORNER_RADIUS,
               }}
             />
           )}
 
-          {/* Status Bar - White icons on wallpaper */}
+          {/* Dynamic Island */}
+          <DynamicIsland />
+
+          {/* Status Bar - White text on wallpaper */}
           <div
-            className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4"
+            className="absolute top-0 left-0 right-0 z-30 flex items-end justify-between px-8"
             style={{
-              height: STATUS_BAR_HEIGHT + 24, // Extra padding for visual balance
-              paddingTop: 8,
+              height: STATUS_BAR_HEIGHT,
+              paddingBottom: 6,
             }}
           >
             {/* Left side: Time + Location */}
@@ -166,30 +180,27 @@ export function PublicProfile({
               <span
                 style={{
                   fontFamily: SYSTEM_FONT,
-                  fontSize: 14,
+                  fontSize: 15,
                   fontWeight: 600,
                   color: STATUS_BAR_TEXT_COLOR,
                   letterSpacing: -0.3,
                 }}
               >
-                0:44
+                9:41
               </span>
               {/* Location arrow */}
-              <svg width="8" height="12" viewBox="0 0 8 12" fill="none">
+              <svg width="7" height="11" viewBox="0 0 7 11" fill="none">
                 <path
-                  d="M4 0L7.5 10.5H4.5V12H3.5V10.5H0.5L4 0Z"
+                  d="M3.5 0L6.5 9.5H4V11H3V9.5H0.5L3.5 0Z"
                   fill={STATUS_BAR_TEXT_COLOR}
                 />
               </svg>
             </div>
 
             {/* Right side: Signal, WiFi, Battery */}
-            <div className="flex items-center gap-[5px]">
+            <div className="flex items-center gap-1">
               {/* Signal Bars - 4 bars */}
-              <div
-                className="flex items-end gap-[1.5px]"
-                style={{ height: 11 }}
-              >
+              <div className="flex items-end gap-[1px]" style={{ height: 12 }}>
                 <div
                   className="w-[3px] rounded-[0.5px]"
                   style={{ height: 3, backgroundColor: STATUS_BAR_TEXT_COLOR }}
@@ -204,26 +215,26 @@ export function PublicProfile({
                 />
                 <div
                   className="w-[3px] rounded-[0.5px]"
-                  style={{ height: 11, backgroundColor: STATUS_BAR_TEXT_COLOR }}
+                  style={{ height: 12, backgroundColor: STATUS_BAR_TEXT_COLOR }}
                 />
               </div>
 
               {/* WiFi Icon */}
-              <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+              <svg width="17" height="12" viewBox="0 0 17 12" fill="none">
                 <path
-                  d="M8 2.5C10.5 2.5 12.8 3.5 14.4 5.1C14.7 5.4 14.7 5.9 14.4 6.2C14.1 6.5 13.6 6.5 13.3 6.2C12 4.9 10.1 4 8 4C5.9 4 4 4.9 2.7 6.2C2.4 6.5 1.9 6.5 1.6 6.2C1.3 5.9 1.3 5.4 1.6 5.1C3.2 3.5 5.5 2.5 8 2.5ZM8 5.5C9.6 5.5 11.1 6.2 12.1 7.2C12.4 7.5 12.4 8 12.1 8.3C11.8 8.6 11.3 8.6 11 8.3C10.3 7.6 9.2 7.1 8 7.1C6.8 7.1 5.7 7.6 5 8.3C4.7 8.6 4.2 8.6 3.9 8.3C3.6 8 3.6 7.5 3.9 7.2C4.9 6.2 6.4 5.5 8 5.5ZM9.5 10C9.5 10.8 8.8 11.5 8 11.5C7.2 11.5 6.5 10.8 6.5 10C6.5 9.2 7.2 8.5 8 8.5C8.8 8.5 9.5 9.2 9.5 10Z"
+                  d="M8.5 2.4C11.1 2.4 13.5 3.4 15.2 5.1C15.5 5.4 15.5 5.9 15.2 6.2C14.9 6.5 14.4 6.5 14.1 6.2C12.7 4.8 10.7 3.9 8.5 3.9C6.3 3.9 4.3 4.8 2.9 6.2C2.6 6.5 2.1 6.5 1.8 6.2C1.5 5.9 1.5 5.4 1.8 5.1C3.5 3.4 5.9 2.4 8.5 2.4ZM8.5 5.4C10.2 5.4 11.8 6.1 12.9 7.2C13.2 7.5 13.2 8 12.9 8.3C12.6 8.6 12.1 8.6 11.8 8.3C11 7.5 9.8 7 8.5 7C7.2 7 6 7.5 5.2 8.3C4.9 8.6 4.4 8.6 4.1 8.3C3.8 8 3.8 7.5 4.1 7.2C5.2 6.1 6.8 5.4 8.5 5.4ZM10.2 10C10.2 10.9 9.4 11.7 8.5 11.7C7.6 11.7 6.8 10.9 6.8 10C6.8 9.1 7.6 8.3 8.5 8.3C9.4 8.3 10.2 9.1 10.2 10Z"
                   fill={STATUS_BAR_TEXT_COLOR}
                 />
               </svg>
 
-              {/* Battery - Yellow (Low Power Mode) */}
+              {/* Battery - Yellow (Low Power Mode style from reference) */}
               <div className="flex items-center">
                 <div
                   className="relative flex items-center justify-center"
                   style={{
-                    width: 22,
-                    height: 10,
-                    borderRadius: 2.5,
+                    width: 25,
+                    height: 12,
+                    borderRadius: 3,
                     border: `1.5px solid ${STATUS_BAR_TEXT_COLOR}`,
                   }}
                 >
@@ -234,17 +245,17 @@ export function PublicProfile({
                       left: 2,
                       top: 2,
                       bottom: 2,
-                      width: 14,
-                      borderRadius: 1,
-                      backgroundColor: "#FFD60A", // iOS yellow
+                      width: 17,
+                      borderRadius: 1.5,
+                      backgroundColor: "#FFD60A",
                     }}
                   />
                 </div>
                 {/* Battery cap */}
                 <div
                   style={{
-                    width: 1.5,
-                    height: 4,
+                    width: 2,
+                    height: 5,
                     backgroundColor: STATUS_BAR_TEXT_COLOR,
                     borderRadius: "0 1px 1px 0",
                     marginLeft: 0.5,
@@ -333,49 +344,22 @@ export function PublicProfile({
               gap: PAGE_DOT_GAP,
             }}
           >
-            <div
-              style={{
-                width: PAGE_DOT_SIZE,
-                height: PAGE_DOT_SIZE,
-                borderRadius: "50%",
-                backgroundColor: PAGE_DOT_ACTIVE_COLOR,
-              }}
-            />
-            <div
-              style={{
-                width: PAGE_DOT_SIZE,
-                height: PAGE_DOT_SIZE,
-                borderRadius: "50%",
-                backgroundColor: PAGE_DOT_INACTIVE_COLOR,
-              }}
-            />
-            <div
-              style={{
-                width: PAGE_DOT_SIZE,
-                height: PAGE_DOT_SIZE,
-                borderRadius: "50%",
-                backgroundColor: PAGE_DOT_INACTIVE_COLOR,
-              }}
-            />
-            <div
-              style={{
-                width: PAGE_DOT_SIZE,
-                height: PAGE_DOT_SIZE,
-                borderRadius: "50%",
-                backgroundColor: PAGE_DOT_INACTIVE_COLOR,
-              }}
-            />
-            <div
-              style={{
-                width: PAGE_DOT_SIZE,
-                height: PAGE_DOT_SIZE,
-                borderRadius: "50%",
-                backgroundColor: PAGE_DOT_INACTIVE_COLOR,
-              }}
-            />
+            {[true, false, false, false, false].map((isActive, i) => (
+              <div
+                key={i}
+                style={{
+                  width: PAGE_DOT_SIZE,
+                  height: PAGE_DOT_SIZE,
+                  borderRadius: "50%",
+                  backgroundColor: isActive
+                    ? PAGE_DOT_ACTIVE_COLOR
+                    : PAGE_DOT_INACTIVE_COLOR,
+                }}
+              />
+            ))}
           </div>
 
-          {/* Dock - Always show if dockLinks exist */}
+          {/* Dock */}
           {dockLinks.length > 0 && (
             <Dock>
               {dockLinks.map((link) => (
@@ -393,6 +377,19 @@ export function PublicProfile({
               ))}
             </Dock>
           )}
+
+          {/* Home Indicator */}
+          <div
+            className="absolute left-1/2 z-30"
+            style={{
+              bottom: HOME_INDICATOR_BOTTOM,
+              transform: "translateX(-50%)",
+              width: HOME_INDICATOR_WIDTH,
+              height: HOME_INDICATOR_HEIGHT,
+              backgroundColor: "#FFFFFF",
+              borderRadius: HOME_INDICATOR_RADIUS,
+            }}
+          />
         </div>
       </div>
     </>
