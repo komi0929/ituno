@@ -3,9 +3,10 @@ import { Database } from "@/lib/types/schema";
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type Link = Database["public"]["Tables"]["links"]["Row"];
 
-// iOS 13 style vibrant orange/red gradient wallpaper (matching reference image)
+// iOS 13 style vibrant orange/red/purple gradient wallpaper
+// Using a reliable high-res gradient that matches the reference
 const WALLPAPER_URL =
-  "https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=800&q=80";
+  "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&q=80";
 
 export const MOCK_PROFILE: Profile = {
   id: "mock-user-id",
@@ -22,9 +23,11 @@ export const MOCK_PROFILE: Profile = {
 
 /**
  * Demo links matching reference iOS home screen layout
+ * Using reliable favicon sources for consistent display
+ *
  * Row 1: カレンダー, 写真, カメラ, 時計
  * Row 2: 天気, リマインダー, App Store, ヘルスケア
- * Row 3: ホーム, Wallet, 設定, (empty)
+ * Row 3: ホーム, Wallet, 設定
  * Dock: Phone, Safari, Messages, Music
  */
 export const MOCK_LINKS: Link[] = [
@@ -34,8 +37,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "カレンダー",
     url: "https://apple.com/calendar",
+    // Calendar icon - rainbow gradient with "25"
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/d6/60/5a/d6605ac4-7db0-5e76-4a78-22c5b8e84c00/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/58d2fc4f25e5dc61af2e7d67bdf4c20c.png",
     is_docked: false,
     sort_order: 0,
     created_at: new Date().toISOString(),
@@ -45,8 +49,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "写真",
     url: "https://apple.com/photos",
+    // Photos icon - colorful pinwheel
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/c8/c0/ca/c8c0ca52-1f1e-6b54-2b75-0d82ac7ad1d2/AppIcon-85-220-0-4-0-0-2x.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/058fa97fdc3c53a7a25f1db7bb2d66d3.png",
     is_docked: false,
     sort_order: 1,
     created_at: new Date().toISOString(),
@@ -56,8 +61,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "カメラ",
     url: "https://apple.com/camera",
+    // Camera icon - gray with lens
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/e1/2e/1d/e12e1d58-5b06-5881-aea8-c2e8f6d45c8c/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/bd5ebfa0c54168427e5d3d3d92d9a2c7.png",
     is_docked: false,
     sort_order: 2,
     created_at: new Date().toISOString(),
@@ -67,8 +73,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "時計",
     url: "https://apple.com/clock",
+    // Clock icon - black with white hands
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/ec/3c/1b/ec3c1b8c-fbf9-e0aa-b8e9-bf2b0a1ea6b1/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/5c6e78e31a7f93d3c8e61c59478fbb85.png",
     is_docked: false,
     sort_order: 3,
     created_at: new Date().toISOString(),
@@ -80,8 +87,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "天気",
     url: "https://weather.apple.com",
+    // Weather icon - blue with sun
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/d4/1a/5c/d41a5ca7-cdb3-b92e-7a5e-c4f0a1db8fbb/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/c12eda01dae18c9e139dc5b1c50130e2.png",
     is_docked: false,
     sort_order: 4,
     created_at: new Date().toISOString(),
@@ -91,8 +99,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "リマインダー",
     url: "https://apple.com/reminders",
+    // Reminders icon - white with colored circles
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/55/a1/bf/55a1bf6a-fc89-e0ea-fc01-67e8c10dd5f6/AppIcon-0-85-220-0-4-0-0-2x.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/f56e2a7e3f9c86e70a9ebd8ac2dd74f4.png",
     is_docked: false,
     sort_order: 5,
     created_at: new Date().toISOString(),
@@ -102,8 +111,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "App Store",
     url: "https://apps.apple.com",
+    // App Store icon - blue with A
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/ab/61/e6/ab61e657-4e97-18f6-b63a-2dd0e97d7bf0/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/ffc2b9d1e51f3e41a894b5c8161c1e11.png",
     is_docked: false,
     sort_order: 6,
     created_at: new Date().toISOString(),
@@ -113,8 +123,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "ヘルスケア",
     url: "https://apple.com/health",
+    // Health icon - white with pink heart
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/af/87/f8/af87f858-a1fb-3c2a-e49b-f5f6f22fea91/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/8fcaf20e0b98caab64ecf62ddaaa585c.png",
     is_docked: false,
     sort_order: 7,
     created_at: new Date().toISOString(),
@@ -126,8 +137,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "ホーム",
     url: "https://apple.com/home",
+    // Home icon - orange with house
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/c6/b9/35/c6b93509-8a57-5867-d239-8c706a03ef5f/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/90a7ec5dab3baab47eff05c16b20fb3c.png",
     is_docked: false,
     sort_order: 8,
     created_at: new Date().toISOString(),
@@ -137,8 +149,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "Wallet",
     url: "https://apple.com/wallet",
+    // Wallet icon - black with colored cards
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/90/26/a1/9026a17b-1a0d-a4bb-8c22-91b0a9e6fe21/Wallet-0-85-220-2x.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/a8b4e1ae3a0a295b5a9a35a3e84c5b9d.png",
     is_docked: false,
     sort_order: 9,
     created_at: new Date().toISOString(),
@@ -148,8 +161,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "設定",
     url: "https://apple.com/settings",
+    // Settings icon - gray with gears
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/6d/a8/b5/6da8b510-3a7d-3ced-d1e5-03db9f2c6e96/AppIcon-85-220-0-4-0-0-2x.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/12dfadb1b2fd9ac2e6b06f77206a0c3c.png",
     is_docked: false,
     sort_order: 10,
     created_at: new Date().toISOString(),
@@ -161,8 +175,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "電話",
     url: "tel:+1234567890",
+    // Phone icon - green with handset
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/8a/c8/e1/8ac8e15f-e09d-6f27-6ad9-8f7aa5af2380/AppIcon-0-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/abf5a0c90bf1ea0bf7c87cb67be07e07.png",
     is_docked: true,
     sort_order: 0,
     created_at: new Date().toISOString(),
@@ -172,8 +187,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "Safari",
     url: "https://apple.com/safari",
+    // Safari icon - compass
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/c8/d4/9c/c8d49c05-3e09-9b50-4c4c-6cc56c91da11/AppIcon-0-85-220-0-4-0-0-2x.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/0e764fb3f57df5c3d4b5b854ef7ddcaa.png",
     is_docked: true,
     sort_order: 1,
     created_at: new Date().toISOString(),
@@ -183,8 +199,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "メッセージ",
     url: "https://apple.com/messages",
+    // Messages icon - green bubble
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/8b/13/e3/8b13e3d5-90f0-b3f7-7d94-2fe8ef0e11cc/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/59871a6ae3d9ae119d6dc4c56f5d01e3.png",
     is_docked: true,
     sort_order: 2,
     created_at: new Date().toISOString(),
@@ -194,8 +211,9 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "ミュージック",
     url: "https://music.apple.com",
+    // Music icon - white with gradient
     icon_url:
-      "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/02/b5/96/02b5963a-bafb-5d1a-4e3a-c9f79de04f19/AppIcon-0-85-220-0-4-0-0-2x.png/512x512bb.jpg",
+      "https://help.apple.com/assets/676E680E6BBBB51BB90F4D92/676E681B6F2F1412980FD7CF/ja_JP/e01b14be6e4a06adbb30dc0e247ce34f.png",
     is_docked: true,
     sort_order: 3,
     created_at: new Date().toISOString(),
