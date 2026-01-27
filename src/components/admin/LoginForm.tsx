@@ -1,57 +1,58 @@
+"use client";
 
-"use client"
-
-import { createClient } from "@/lib/supabase/client"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { signupAction } from "@/app/login/actions";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface LoginFormProps {
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 export function LoginForm({ disabled }: LoginFormProps) {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [mode, setMode] = useState<"login" | "signup">("login")
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (disabled) return
+    e.preventDefault();
+    if (disabled) return;
 
-    const supabase = createClient()
+    const supabase = createClient();
     if (!supabase) {
-      setError("Supabase が設定されていません")
-      return
+      setError("Supabase が設定されていません");
+      return;
     }
 
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
 
     try {
       if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
-        })
-        if (error) throw error
+        });
+        if (error) throw error;
       } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        })
-        if (error) throw error
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
+
+        const result = await signupAction(formData);
+        if (result.error) throw new Error(result.error);
       }
-      router.push("/admin")
-      router.refresh()
+      router.push("/admin");
+      router.refresh();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "認証に失敗しました")
+      setError(err instanceof Error ? err.message : "認証に失敗しました");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="mt-8 space-y-6">
@@ -63,7 +64,10 @@ export function LoginForm({ disabled }: LoginFormProps) {
 
       <div className="space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-zinc-300">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-zinc-300"
+          >
             メールアドレス
           </label>
           <input
@@ -79,7 +83,10 @@ export function LoginForm({ disabled }: LoginFormProps) {
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-zinc-300">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-zinc-300"
+          >
             パスワード
           </label>
           <input
@@ -101,7 +108,11 @@ export function LoginForm({ disabled }: LoginFormProps) {
         disabled={isLoading || disabled}
         className="w-full rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3 font-semibold text-white transition-all hover:from-blue-500 hover:to-purple-500 disabled:opacity-50"
       >
-        {isLoading ? "処理中..." : mode === "login" ? "ログイン" : "アカウント作成"}
+        {isLoading
+          ? "処理中..."
+          : mode === "login"
+            ? "ログイン"
+            : "アカウント作成"}
       </button>
 
       <div className="text-center">
@@ -111,9 +122,11 @@ export function LoginForm({ disabled }: LoginFormProps) {
           disabled={disabled}
           className="text-sm text-zinc-400 hover:text-white disabled:opacity-50"
         >
-          {mode === "login" ? "アカウントを作成する" : "既にアカウントをお持ちですか？"}
+          {mode === "login"
+            ? "アカウントを作成する"
+            : "既にアカウントをお持ちですか？"}
         </button>
       </div>
     </form>
-  )
+  );
 }
