@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchUrlMetadata } from "@/app/admin/actions";
 import { createClient } from "@/lib/supabase/client";
 import { Database } from "@/lib/types/schema";
 import { getAppIconUrl } from "@/lib/utils/app-icons";
@@ -52,84 +53,113 @@ function SortableLinkItem({ link, onUpdate, onDelete }: SortableLinkItemProps) {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 10 : 1,
+  };
+
+  // Handle URL changes with auto-fetch
+  const handleUrlBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    const url = e.target.value;
+    if (!url) return;
+
+    // If title is empty or default, try to fetch metadata
+    if (!link.title || link.title === "新しいリンク") {
+      const metadata = await fetchUrlMetadata(url);
+      if (metadata?.title) {
+        onUpdate(link.id, {
+          title: metadata.title,
+          icon_url: metadata.icon_url,
+        });
+      }
+    }
   };
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-800/50 p-4"
+      className="group relative flex gap-4 rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 transition-all hover:border-zinc-700 hover:bg-zinc-900"
     >
+      {/* Drag Handle */}
       <button
         {...attributes}
         {...listeners}
-        className="cursor-grab text-zinc-500 hover:text-white"
+        className="mt-2 text-zinc-600 transition-colors hover:text-zinc-400 focus:outline-none"
       >
         <GripVertical className="h-5 w-5" />
       </button>
 
-      {link.icon_url && (
-        <img
-          src={link.icon_url}
-          alt={link.title}
-          className="h-10 w-10 rounded-lg object-cover"
-        />
-      )}
-
-      <div className="flex-1 space-y-2">
-        <input
-          type="text"
-          value={link.title}
-          onChange={(e) => onUpdate(link.id, { title: e.target.value })}
-          className="w-full rounded border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-sm text-white focus:border-blue-500 focus:outline-none"
-          placeholder="タイトル"
-        />
-        <input
-          type="url"
-          value={link.url}
-          onChange={(e) => {
-            const url = e.target.value;
-            onUpdate(link.id, {
-              url,
-              // Immediate local update for icon (optimistic)
-              icon_url: getAppIconUrl(url),
-            });
-          }}
-          onBlur={async (e) => {
-            const url = e.target.value;
-            if (!url) return;
-
-            // Only fetch if title is empty or default "新しいリンク"
-            if (!link.title || link.title === "新しいリンク") {
-              const { fetchUrlMetadata } = await import("@/app/admin/actions");
-              const metadata = await fetchUrlMetadata(url);
-              if (metadata?.title) {
-                onUpdate(link.id, {
-                  title: metadata.title,
-                  // Update icon again just in case (though getAppIconUrl is consistent)
-                  icon_url: metadata.icon_url,
-                });
-              }
-            }
-          }}
-          className="w-full rounded border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-sm text-white focus:border-blue-500 focus:outline-none"
-          placeholder="https://..."
-        />
+      {/* Icon Preview */}
+      <div className="flex-shrink-0 pt-1">
+        <div className="h-10 w-10 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-800">
+          {link.icon_url ? (
+            <img
+              src={link.icon_url}
+              alt={link.title}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-xs text-zinc-600">
+              No Icon
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label className="flex items-center gap-2 text-xs text-zinc-400">
+      {/* Inputs */}
+      <div className="flex-1 space-y-3">
+        <div>
+          <label className="sr-only">タイトル</label>
+          <input
+            type="text"
+            value={link.title}
+            onChange={(e) => onUpdate(link.id, { title: e.target.value })}
+            className="w-full bg-transparent text-sm font-medium text-white placeholder-zinc-500 focus:outline-none"
+            placeholder="サイトのタイトル..."
+          />
+        </div>
+
+        <div>
+          <label className="sr-only">URL</label>
+          <input
+            type="url"
+            value={link.url}
+            onChange={(e) => {
+              const url = e.target.value;
+              onUpdate(link.id, {
+                url,
+                icon_url: getAppIconUrl(url), // Optimistic update
+              });
+            }}
+            onBlur={handleUrlBlur}
+            className="w-full bg-transparent text-sm text-blue-400 placeholder-zinc-600 focus:outline-none"
+            placeholder="https://example.com"
+          />
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex flex-col items-end justify-between gap-2">
+        {/* Toggle Dock */}
+        <label
+          className={`flex cursor-pointer items-center gap-2 rounded-full px-2 py-1 text-xs font-medium transition-colors ${
+            link.is_docked
+              ? "bg-blue-500/10 text-blue-400"
+              : "bg-zinc-800 text-zinc-400 hover:text-zinc-300"
+          }`}
+        >
           <input
             type="checkbox"
             checked={link.is_docked ?? false}
             onChange={(e) => onUpdate(link.id, { is_docked: e.target.checked })}
-            className="rounded border-zinc-600"
+            className="hidden"
           />
           Dock
         </label>
+
         <button
           onClick={() => onDelete(link.id)}
-          className="text-red-400 hover:text-red-300"
+          className="rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-red-500/10 hover:text-red-400 opacity-0 group-hover:opacity-100"
+          title="削除"
         >
           <Trash2 className="h-4 w-4" />
         </button>
@@ -159,8 +189,8 @@ export function LinkManager({
       const newLink: LinkInsert = {
         user_id: userId,
         title: "新しいリンク",
-        url: "https://example.com",
-        icon_url: getAppIconUrl("https://example.com"),
+        url: "", // Empty by default now to encourage pasting
+        icon_url: "",
         is_docked: false,
         sort_order: links.length,
       };
@@ -217,13 +247,20 @@ export function LinkManager({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-2xl space-y-8 py-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">リンク管理</h2>
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight text-white">
+            リンク管理
+          </h2>
+          <p className="mt-1 text-sm text-zinc-400">
+            ホーム画面に表示するアプリやリンクを管理します。
+          </p>
+        </div>
         <button
           onClick={handleAddLink}
           disabled={isAdding}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500 disabled:opacity-50"
+          className="flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-blue-500 hover:shadow-lg disabled:opacity-50"
         >
           {isAdding ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -240,7 +277,7 @@ export function LinkManager({
         onDragEnd={handleDragEnd}
       >
         <SortableContext items={links} strategy={verticalListSortingStrategy}>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {links.map((link) => (
               <SortableLinkItem
                 key={link.id}
@@ -254,8 +291,16 @@ export function LinkManager({
       </DndContext>
 
       {links.length === 0 && (
-        <div className="rounded-lg border border-dashed border-zinc-700 p-8 text-center text-zinc-500">
-          リンクがありません。「リンクを追加」ボタンをクリックして始めましょう。
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/30 py-20 text-center">
+          <div className="rounded-full bg-zinc-800 p-4">
+            <Plus className="h-6 w-6 text-zinc-500" />
+          </div>
+          <h3 className="mt-4 text-sm font-medium text-white">
+            リンクがありません
+          </h3>
+          <p className="mt-1 text-sm text-zinc-500">
+            「リンクを追加」ボタンから最初のリンクを作成しましょう。
+          </p>
         </div>
       )}
     </div>
