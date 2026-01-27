@@ -6,6 +6,7 @@ import {
   ICON_SIZE,
   LABEL_COLOR,
   LABEL_FONT_SIZE,
+  LABEL_SHADOW,
   LABEL_WIDTH,
   SYSTEM_FONT,
 } from "@/lib/ios-constants";
@@ -23,10 +24,10 @@ interface AppIconProps {
 }
 
 /**
- * Standard iOS App Icon
- * - 60x60px with 13px border-radius (squircle)
- * - ALL icons are MASKED to squircle shape (this is iOS standard)
- * - Label centered below (11px gray text)
+ * iOS App Icon - Pixel Perfect
+ * - 60x60px with 13.5px border-radius (iOS squircle approximation)
+ * - Label: 11px white with drop shadow
+ * - All icons masked to squircle shape
  */
 export function AppIcon({
   id,
@@ -53,15 +54,15 @@ export function AppIcon({
             : "none",
         }}
       >
-        {/* Icon Container - 60x60, 13px radius, CLIPS ALL CONTENT */}
+        {/* Icon Container - Squircle with shadow */}
         <div
           className="relative flex items-center justify-center bg-white"
           style={{
             width: ICON_SIZE,
             height: ICON_SIZE,
             borderRadius: ICON_RADIUS,
-            boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
-            overflow: "hidden", // CRITICAL: clips image to squircle
+            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.2)",
+            overflow: "hidden",
           }}
         >
           {iconUrl ? (
@@ -72,12 +73,7 @@ export function AppIcon({
               draggable={false}
               crossOrigin="anonymous"
               referrerPolicy="no-referrer"
-              style={{
-                // Ensure image fills the container and gets clipped
-                objectFit: "cover",
-              }}
               onError={(e) => {
-                // Only hide if it's definitely broken, but for debugging we might want to see
                 e.currentTarget.style.display = "none";
                 const fallback = e.currentTarget
                   .nextElementSibling as HTMLElement;
@@ -87,8 +83,11 @@ export function AppIcon({
           ) : null}
           {/* Fallback - gradient with initial letter */}
           <div
-            className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-400 to-gray-500 text-white text-2xl font-semibold"
-            style={{ display: iconUrl ? "none" : "flex" }}
+            className="absolute inset-0 flex items-center justify-center text-white text-2xl font-semibold"
+            style={{
+              display: iconUrl ? "none" : "flex",
+              background: "linear-gradient(180deg, #A8A8A8 0%, #7A7A7A 100%)",
+            }}
           >
             {title.charAt(0).toUpperCase()}
           </div>
@@ -101,22 +100,24 @@ export function AppIcon({
               e.stopPropagation();
               onRemove();
             }}
-            className="absolute -left-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-500/90 shadow"
+            className="absolute -left-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-600/90 shadow-md"
           >
             <X className="h-3 w-3 text-white" strokeWidth={2.5} />
           </button>
         )}
       </div>
 
-      {/* Label - 11px, centered, gray */}
+      {/* Label - 11px white with drop shadow */}
       {showLabel && (
         <span
-          className="mt-1.5 truncate text-center font-normal select-none"
+          className="mt-1 truncate text-center font-normal select-none"
           style={{
             fontFamily: SYSTEM_FONT,
             fontSize: LABEL_FONT_SIZE,
             color: LABEL_COLOR,
             width: LABEL_WIDTH,
+            textShadow: LABEL_SHADOW,
+            lineHeight: 1.2,
           }}
         >
           {title}
@@ -127,8 +128,7 @@ export function AppIcon({
 }
 
 /**
- * Dock Icon - Same as AppIcon but without label
- * IMPORTANT: Uses squircle mask to clip all icon images
+ * Dock Icon - Same size as AppIcon but no label
  */
 interface DockIconProps {
   id: string;
@@ -161,15 +161,14 @@ export function DockIcon({
           : "none",
       }}
     >
-      {/* Icon Container - SQUIRCLE MASK applied to ALL icons */}
       <div
         className="relative flex items-center justify-center bg-white"
         style={{
           width: ICON_SIZE,
           height: ICON_SIZE,
           borderRadius: ICON_RADIUS,
-          boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
-          overflow: "hidden", // CRITICAL: clips circular icons to squircle
+          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.2)",
+          overflow: "hidden",
         }}
       >
         {iconUrl ? (
@@ -180,9 +179,6 @@ export function DockIcon({
             draggable={false}
             crossOrigin="anonymous"
             referrerPolicy="no-referrer"
-            style={{
-              objectFit: "cover",
-            }}
             onError={(e) => {
               e.currentTarget.style.display = "none";
               const fallback = e.currentTarget
@@ -192,8 +188,11 @@ export function DockIcon({
           />
         ) : null}
         <div
-          className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-400 to-gray-500 text-white text-xl font-semibold"
-          style={{ display: iconUrl ? "none" : "flex" }}
+          className="absolute inset-0 flex items-center justify-center text-white text-xl font-semibold"
+          style={{
+            display: iconUrl ? "none" : "flex",
+            background: "linear-gradient(180deg, #A8A8A8 0%, #7A7A7A 100%)",
+          }}
         >
           {title.charAt(0).toUpperCase()}
         </div>

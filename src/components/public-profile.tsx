@@ -2,19 +2,22 @@
 
 import { AppIcon, DockIcon } from "@/components/ios/AppIcon";
 import { Dock } from "@/components/ios/Dock";
-import { ProfileWidget } from "@/components/ios/ProfileWidget";
 import { SortableAppIcon } from "@/components/ios/SortableAppIcon";
 import {
-  GRID_ROW_GAP,
-  HOME_INDICATOR_HEIGHT,
-  HOME_INDICATOR_WIDTH,
-  IOS_BACKGROUND,
-  PAGE_DOT_ACTIVE,
-  PAGE_DOT_INACTIVE,
+  GRID_COLUMN_WIDTH,
+  GRID_HORIZONTAL_PADDING,
+  GRID_ROW_HEIGHT,
+  GRID_TOP_OFFSET,
+  JIGGLE_KEYFRAMES,
+  PAGE_DOT_ACTIVE_COLOR,
+  PAGE_DOT_GAP,
+  PAGE_DOT_INACTIVE_COLOR,
   PAGE_DOT_SIZE,
+  PAGE_DOTS_BOTTOM,
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
   STATUS_BAR_HEIGHT,
+  STATUS_BAR_TEXT_COLOR,
   SYSTEM_FONT,
 } from "@/lib/ios-constants";
 import { Database } from "@/lib/types/schema";
@@ -41,7 +44,6 @@ type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type Link = Database["public"]["Tables"]["links"]["Row"];
 
 interface PublicProfileProps {
-  username: string;
   serverProfile: Profile;
   serverLinks: Link[];
 }
@@ -53,12 +55,16 @@ interface ThemeConfig {
 
 /**
  * iOS Home Screen - Pixel-Perfect Reproduction
- * Based on exact analysis of reference screenshot
+ * Matches the reference image exactly:
+ * - Status bar with time, location arrow, signal, WiFi, battery (white on wallpaper)
+ * - 4-column grid with white labels and drop shadows
+ * - Page dots above dock
+ * - Frosted glass dock
  */
 export function PublicProfile({
   serverProfile,
   serverLinks,
-}: Omit<PublicProfileProps, "username">) {
+}: PublicProfileProps) {
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
@@ -70,6 +76,7 @@ export function PublicProfile({
 
   const themeConfig = serverProfile.theme_config as unknown as ThemeConfig;
 
+  // Separate grid icons from dock icons
   const gridLinks = links
     .filter((l) => !l.is_docked)
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
@@ -107,135 +114,147 @@ export function PublicProfile({
 
   const activeItem = links.find((l) => l.id === activeId);
 
+  // Split grid icons into rows of 4
+  const iconRows: Link[][] = [];
+  for (let i = 0; i < gridLinks.length; i += 4) {
+    iconRows.push(gridLinks.slice(i, i + 4));
+  }
+
   if (!isMounted) return null;
 
   return (
-    // Full screen container with black letterbox on desktop
-    <div className="flex min-h-[100dvh] w-full items-center justify-center bg-black">
-      {/* Phone Screen - maintains iPhone aspect ratio */}
-      <div
-        className="relative w-full overflow-hidden"
-        style={{
-          backgroundColor: IOS_BACKGROUND,
-          maxWidth: SCREEN_WIDTH,
-          height: "100dvh",
-          maxHeight: SCREEN_HEIGHT,
-        }}
-        onClick={handleBackgroundClick}
-      >
-        {/* Wallpaper Layer */}
-        {themeConfig?.wallpaper && (
-          <div
-            className="absolute inset-0 z-0"
-            style={{
-              backgroundImage: `url(${themeConfig.wallpaper})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          />
-        )}
+    <>
+      {/* Inject jiggle keyframes */}
+      <style>{JIGGLE_KEYFRAMES}</style>
 
-        {/* Status Bar - High-fidelity iOS design */}
+      {/* Full screen container - black letterbox on desktop */}
+      <div className="flex min-h-[100dvh] w-full items-center justify-center bg-black">
+        {/* Phone Screen - iPhone aspect ratio */}
         <div
-          className="relative z-30 flex w-full items-center justify-between px-7"
-          style={{ height: STATUS_BAR_HEIGHT, paddingTop: 14 }}
+          className="relative overflow-hidden"
+          style={{
+            width: SCREEN_WIDTH,
+            height: SCREEN_HEIGHT,
+            maxWidth: "100vw",
+            maxHeight: "100dvh",
+            backgroundColor: "#1C1C1E", // Fallback dark gray
+          }}
+          onClick={handleBackgroundClick}
         >
-          {/* Time - iOS SF Pro semibold */}
-          <span
-            className="text-[17px] font-semibold tracking-[-0.4px]"
+          {/* Wallpaper Layer - fills entire screen */}
+          {themeConfig?.wallpaper && (
+            <div
+              className="absolute inset-0 z-0"
+              style={{
+                backgroundImage: `url(${themeConfig.wallpaper})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
+          )}
+
+          {/* Status Bar - White icons on wallpaper */}
+          <div
+            className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4"
             style={{
-              fontFamily: SYSTEM_FONT,
-              color: "#000",
-              fontWeight: 600,
+              height: STATUS_BAR_HEIGHT + 24, // Extra padding for visual balance
+              paddingTop: 8,
             }}
           >
-            9:41
-          </span>
-
-          {/* Right indicators - Signal, WiFi, Battery */}
-          <div className="flex items-center gap-[5px]">
-            {/* Cellular Signal - 4 bars with proper spacing */}
-            <div className="flex items-end gap-[1.5px]" style={{ height: 12 }}>
-              <div
-                className="w-[3px] rounded-[1px] bg-black"
-                style={{ height: 4 }}
-              ></div>
-              <div
-                className="w-[3px] rounded-[1px] bg-black"
-                style={{ height: 6 }}
-              ></div>
-              <div
-                className="w-[3px] rounded-[1px] bg-black"
-                style={{ height: 9 }}
-              ></div>
-              <div
-                className="w-[3px] rounded-[1px] bg-black"
-                style={{ height: 12 }}
-              ></div>
-            </div>
-
-            {/* WiFi - Apple's official icon path */}
-            <svg
-              width="17"
-              height="12"
-              viewBox="0 0 17 12"
-              fill="none"
-              style={{ marginLeft: 2 }}
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M8.5 2.4C11.1 2.4 13.5 3.4 15.2 5.1C15.5 5.4 15.5 5.9 15.2 6.2C14.9 6.5 14.4 6.5 14.1 6.2C12.7 4.8 10.7 3.9 8.5 3.9C6.3 3.9 4.3 4.8 2.9 6.2C2.6 6.5 2.1 6.5 1.8 6.2C1.5 5.9 1.5 5.4 1.8 5.1C3.5 3.4 5.9 2.4 8.5 2.4ZM8.5 5.4C10.2 5.4 11.8 6.1 12.9 7.2C13.2 7.5 13.2 8 12.9 8.3C12.6 8.6 12.1 8.6 11.8 8.3C11 7.5 9.8 7 8.5 7C7.2 7 6 7.5 5.2 8.3C4.9 8.6 4.4 8.6 4.1 8.3C3.8 8 3.8 7.5 4.1 7.2C5.2 6.1 6.8 5.4 8.5 5.4ZM10.2 10C10.2 10.9 9.4 11.7 8.5 11.7C7.6 11.7 6.8 10.9 6.8 10C6.8 9.1 7.6 8.3 8.5 8.3C9.4 8.3 10.2 9.1 10.2 10Z"
-                fill="black"
-              />
-            </svg>
-
-            {/* Battery - proper iOS proportions */}
-            <div className="flex items-center" style={{ marginLeft: 2 }}>
-              <div
-                className="relative flex items-center justify-center"
+            {/* Left side: Time + Location */}
+            <div className="flex items-center gap-1">
+              <span
                 style={{
-                  width: 25,
-                  height: 12,
-                  borderRadius: 3,
-                  border: "1px solid rgba(0,0,0,0.35)",
+                  fontFamily: SYSTEM_FONT,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: STATUS_BAR_TEXT_COLOR,
+                  letterSpacing: -0.3,
                 }}
               >
-                {/* Battery fill */}
-                <div
-                  className="absolute left-[2px] top-[2px] bottom-[2px] bg-black"
-                  style={{
-                    right: 4,
-                    borderRadius: 1.5,
-                  }}
-                ></div>
-              </div>
-              {/* Battery cap */}
+                0:44
+              </span>
+              {/* Location arrow */}
+              <svg width="8" height="12" viewBox="0 0 8 12" fill="none">
+                <path
+                  d="M4 0L7.5 10.5H4.5V12H3.5V10.5H0.5L4 0Z"
+                  fill={STATUS_BAR_TEXT_COLOR}
+                />
+              </svg>
+            </div>
+
+            {/* Right side: Signal, WiFi, Battery */}
+            <div className="flex items-center gap-[5px]">
+              {/* Signal Bars - 4 bars */}
               <div
-                style={{
-                  width: 2,
-                  height: 5,
-                  backgroundColor: "rgba(0,0,0,0.35)",
-                  borderRadius: "0 1px 1px 0",
-                  marginLeft: 0.5,
-                }}
-              ></div>
+                className="flex items-end gap-[1.5px]"
+                style={{ height: 11 }}
+              >
+                <div
+                  className="w-[3px] rounded-[0.5px]"
+                  style={{ height: 3, backgroundColor: STATUS_BAR_TEXT_COLOR }}
+                />
+                <div
+                  className="w-[3px] rounded-[0.5px]"
+                  style={{ height: 5, backgroundColor: STATUS_BAR_TEXT_COLOR }}
+                />
+                <div
+                  className="w-[3px] rounded-[0.5px]"
+                  style={{ height: 8, backgroundColor: STATUS_BAR_TEXT_COLOR }}
+                />
+                <div
+                  className="w-[3px] rounded-[0.5px]"
+                  style={{ height: 11, backgroundColor: STATUS_BAR_TEXT_COLOR }}
+                />
+              </div>
+
+              {/* WiFi Icon */}
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+                <path
+                  d="M8 2.5C10.5 2.5 12.8 3.5 14.4 5.1C14.7 5.4 14.7 5.9 14.4 6.2C14.1 6.5 13.6 6.5 13.3 6.2C12 4.9 10.1 4 8 4C5.9 4 4 4.9 2.7 6.2C2.4 6.5 1.9 6.5 1.6 6.2C1.3 5.9 1.3 5.4 1.6 5.1C3.2 3.5 5.5 2.5 8 2.5ZM8 5.5C9.6 5.5 11.1 6.2 12.1 7.2C12.4 7.5 12.4 8 12.1 8.3C11.8 8.6 11.3 8.6 11 8.3C10.3 7.6 9.2 7.1 8 7.1C6.8 7.1 5.7 7.6 5 8.3C4.7 8.6 4.2 8.6 3.9 8.3C3.6 8 3.6 7.5 3.9 7.2C4.9 6.2 6.4 5.5 8 5.5ZM9.5 10C9.5 10.8 8.8 11.5 8 11.5C7.2 11.5 6.5 10.8 6.5 10C6.5 9.2 7.2 8.5 8 8.5C8.8 8.5 9.5 9.2 9.5 10Z"
+                  fill={STATUS_BAR_TEXT_COLOR}
+                />
+              </svg>
+
+              {/* Battery - Yellow (Low Power Mode) */}
+              <div className="flex items-center">
+                <div
+                  className="relative flex items-center justify-center"
+                  style={{
+                    width: 22,
+                    height: 10,
+                    borderRadius: 2.5,
+                    border: `1.5px solid ${STATUS_BAR_TEXT_COLOR}`,
+                  }}
+                >
+                  {/* Battery fill - Yellow */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 2,
+                      top: 2,
+                      bottom: 2,
+                      width: 14,
+                      borderRadius: 1,
+                      backgroundColor: "#FFD60A", // iOS yellow
+                    }}
+                  />
+                </div>
+                {/* Battery cap */}
+                <div
+                  style={{
+                    width: 1.5,
+                    height: 4,
+                    backgroundColor: STATUS_BAR_TEXT_COLOR,
+                    borderRadius: "0 1px 1px 0",
+                    marginLeft: 0.5,
+                  }}
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Main Content Area */}
-        <main
-          className="relative z-10 flex flex-col px-5 pt-4 pb-28 overflow-y-auto scrollbar-hide"
-          style={{ height: `calc(100% - ${STATUS_BAR_HEIGHT}px)` }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Profile Widget */}
-          <div className="mb-6">
-            <ProfileWidget profile={serverProfile} />
-          </div>
-
-          {/* App Grid: 4 columns */}
+          {/* Main Content: App Grid */}
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -243,23 +262,51 @@ export function PublicProfile({
             onDragEnd={handleDragEnd}
           >
             <div
-              className="grid grid-cols-4 justify-items-center"
-              style={{ rowGap: GRID_ROW_GAP }}
+              className="absolute z-10"
+              style={{
+                top: GRID_TOP_OFFSET,
+                left: GRID_HORIZONTAL_PADDING,
+                right: GRID_HORIZONTAL_PADDING,
+              }}
             >
               <SortableContext items={gridLinks} strategy={rectSortingStrategy}>
-                {gridLinks.map((link) => (
-                  <SortableAppIcon
-                    key={link.id}
-                    id={link.id}
-                    title={link.title}
-                    iconUrl={link.icon_url}
-                    isJiggling={isJiggleMode}
-                    onLongPress={() => setIsJiggleMode(true)}
-                    onClick={() =>
-                      !isJiggleMode && window.open(link.url, "_blank")
-                    }
-                    onRemove={() => console.log("Remove", link.id)}
-                  />
+                {iconRows.map((row, rowIndex) => (
+                  <div
+                    key={rowIndex}
+                    className="flex justify-between"
+                    style={{
+                      marginBottom:
+                        rowIndex < iconRows.length - 1
+                          ? GRID_ROW_HEIGHT - 76
+                          : 0,
+                    }}
+                  >
+                    {row.map((link) => (
+                      <div key={link.id} style={{ width: GRID_COLUMN_WIDTH }}>
+                        <div className="flex justify-center">
+                          <SortableAppIcon
+                            id={link.id}
+                            title={link.title}
+                            iconUrl={link.icon_url}
+                            isJiggling={isJiggleMode}
+                            onLongPress={() => setIsJiggleMode(true)}
+                            onClick={() =>
+                              !isJiggleMode && window.open(link.url, "_blank")
+                            }
+                            onRemove={() => console.log("Remove", link.id)}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    {/* Fill empty slots in last row */}
+                    {row.length < 4 &&
+                      Array.from({ length: 4 - row.length }).map((_, i) => (
+                        <div
+                          key={`empty-${i}`}
+                          style={{ width: GRID_COLUMN_WIDTH }}
+                        />
+                      ))}
+                  </div>
                 ))}
               </SortableContext>
             </div>
@@ -278,61 +325,76 @@ export function PublicProfile({
             </DragOverlay>
           </DndContext>
 
-          {/* Page Dots */}
-          <div className="flex justify-center gap-1.5 mt-6">
+          {/* Page Dots - Above Dock */}
+          <div
+            className="absolute left-0 right-0 z-20 flex items-center justify-center"
+            style={{
+              bottom: PAGE_DOTS_BOTTOM,
+              gap: PAGE_DOT_GAP,
+            }}
+          >
             <div
-              className="rounded-full"
               style={{
                 width: PAGE_DOT_SIZE,
                 height: PAGE_DOT_SIZE,
-                backgroundColor: PAGE_DOT_ACTIVE,
+                borderRadius: "50%",
+                backgroundColor: PAGE_DOT_ACTIVE_COLOR,
               }}
             />
             <div
-              className="rounded-full"
               style={{
                 width: PAGE_DOT_SIZE,
                 height: PAGE_DOT_SIZE,
-                backgroundColor: PAGE_DOT_INACTIVE,
+                borderRadius: "50%",
+                backgroundColor: PAGE_DOT_INACTIVE_COLOR,
               }}
             />
             <div
-              className="rounded-full"
               style={{
                 width: PAGE_DOT_SIZE,
                 height: PAGE_DOT_SIZE,
-                backgroundColor: PAGE_DOT_INACTIVE,
+                borderRadius: "50%",
+                backgroundColor: PAGE_DOT_INACTIVE_COLOR,
+              }}
+            />
+            <div
+              style={{
+                width: PAGE_DOT_SIZE,
+                height: PAGE_DOT_SIZE,
+                borderRadius: "50%",
+                backgroundColor: PAGE_DOT_INACTIVE_COLOR,
+              }}
+            />
+            <div
+              style={{
+                width: PAGE_DOT_SIZE,
+                height: PAGE_DOT_SIZE,
+                borderRadius: "50%",
+                backgroundColor: PAGE_DOT_INACTIVE_COLOR,
               }}
             />
           </div>
-        </main>
 
-        {/* Dock */}
-        {dockLinks.length > 0 && (
-          <Dock>
-            {dockLinks.map((link) => (
-              <DockIcon
-                key={link.id}
-                id={link.id}
-                title={link.title}
-                iconUrl={link.icon_url}
-                isJiggling={isJiggleMode}
-                onLongPress={() => setIsJiggleMode(true)}
-                onClick={() => !isJiggleMode && window.open(link.url, "_blank")}
-              />
-            ))}
-          </Dock>
-        )}
-
-        {/* Home Indicator */}
-        <div
-          className="absolute bottom-1 left-1/2 -translate-x-1/2 rounded-full bg-black/20 z-30"
-          style={{
-            width: HOME_INDICATOR_WIDTH,
-            height: HOME_INDICATOR_HEIGHT,
-          }}
-        />
+          {/* Dock - Always show if dockLinks exist */}
+          {dockLinks.length > 0 && (
+            <Dock>
+              {dockLinks.map((link) => (
+                <DockIcon
+                  key={link.id}
+                  id={link.id}
+                  title={link.title}
+                  iconUrl={link.icon_url}
+                  isJiggling={isJiggleMode}
+                  onLongPress={() => setIsJiggleMode(true)}
+                  onClick={() =>
+                    !isJiggleMode && window.open(link.url, "_blank")
+                  }
+                />
+              ))}
+            </Dock>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
