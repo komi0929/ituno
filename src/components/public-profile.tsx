@@ -6,6 +6,7 @@ import { DynamicIsland } from "@/components/ios/DynamicIsland";
 import { SortableAppIcon } from "@/components/ios/SortableAppIcon";
 import { SquircleDefs } from "@/components/ios/SquircleDefs";
 import {
+import {
   GRID_COLUMN_WIDTH,
   GRID_HORIZONTAL_PADDING,
   GRID_ROW_HEIGHT,
@@ -27,6 +28,7 @@ import {
   STATUS_BAR_TEXT_COLOR,
   SYSTEM_FONT,
 } from "@/lib/ios-constants";
+import { LOCAL_APP_ICONS } from "@/lib/utils/itunes-api";
 import { Database } from "@/lib/types/schema";
 import {
   closestCenter,
@@ -300,7 +302,7 @@ export function PublicProfile({
                           <SortableAppIcon
                             id={link.id}
                             title={link.title}
-                            iconUrl={link.icon_url}
+                            iconUrl={LOCAL_APP_ICONS[link.title] || link.icon_url}
                             isJiggling={isJiggleMode}
                             onLongPress={() => setIsJiggleMode(true)}
                             onClick={() =>
@@ -330,7 +332,7 @@ export function PublicProfile({
                   <AppIcon
                     id={activeItem.id}
                     title={activeItem.title}
-                    iconUrl={activeItem.icon_url}
+                    iconUrl={LOCAL_APP_ICONS[activeItem.title] || activeItem.icon_url}
                     isJiggling={true}
                   />
                 </div>
@@ -369,7 +371,7 @@ export function PublicProfile({
                   key={link.id}
                   id={link.id}
                   title={link.title}
-                  iconUrl={link.icon_url}
+                  iconUrl={LOCAL_APP_ICONS[link.title] || link.icon_url}
                   isJiggling={isJiggleMode}
                   onLongPress={() => setIsJiggleMode(true)}
                   onClick={() =>

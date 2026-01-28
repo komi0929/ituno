@@ -7,6 +7,7 @@ import { PhoneFrame } from "@/components/ios/PhoneFrame";
 import { SquircleDefs } from "@/components/ios/SquircleDefs";
 import { StatusBar } from "@/components/ios/StatusBar";
 import { Database } from "@/lib/types/schema";
+import { LOCAL_APP_ICONS } from "@/lib/utils/itunes-api";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type Link = Database["public"]["Tables"]["links"]["Row"];
@@ -71,7 +72,7 @@ export function LivePreview({ profile, links }: LivePreviewProps) {
               key={link.id}
               id={link.id}
               title={link.title}
-              iconUrl={link.icon_url}
+              iconUrl={LOCAL_APP_ICONS[link.title] || link.icon_url}
             />
           ))}
         </div>
@@ -84,7 +85,7 @@ export function LivePreview({ profile, links }: LivePreviewProps) {
                 key={link.id}
                 id={link.id}
                 title={link.title}
-                iconUrl={link.icon_url}
+                iconUrl={LOCAL_APP_ICONS[link.title] || link.icon_url}
               />
             ))}
           </Dock>

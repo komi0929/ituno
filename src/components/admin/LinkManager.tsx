@@ -1,9 +1,8 @@
-"use client";
-
 import { fetchUrlMetadata } from "@/app/admin/actions";
 import { createClient } from "@/lib/supabase/client";
 import { Database } from "@/lib/types/schema";
 import { getAppIconUrl } from "@/lib/utils/app-icons";
+import { LOCAL_APP_ICONS } from "@/lib/utils/itunes-api";
 import {
   closestCenter,
   DndContext,
@@ -91,9 +90,9 @@ function SortableLinkItem({ link, onUpdate, onDelete }: SortableLinkItemProps) {
       {/* Icon Preview */}
       <div className="flex-shrink-0 pt-1">
         <div className="h-10 w-10 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-800">
-          {link.icon_url ? (
+          {link.icon_url || LOCAL_APP_ICONS[link.title] ? (
             <img
-              src={link.icon_url}
+              src={LOCAL_APP_ICONS[link.title] || link.icon_url || ""}
               alt={link.title}
               className="h-full w-full object-cover"
             />

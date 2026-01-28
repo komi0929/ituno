@@ -166,3 +166,60 @@ export async function searchAppIcon(
     return null;
   }
 }
+
+/**
+ * Local Icon Override Map
+ * Maps App Titles (from DB) to Local File Paths
+ * This ensures we use the high-fidelity local icons instead of remote URLs
+ */
+export const LOCAL_APP_ICONS: Record<string, string> = {
+  // Row 1
+  カレンダー: "/icons/calendar.png",
+  Calendar: "/icons/calendar.png",
+  写真: "/icons/photos.png",
+  Photos: "/icons/photos.png",
+  カメラ: "/icons/camera.png",
+  Camera: "/icons/camera.png",
+  時計: "/icons/clock.png",
+  Clock: "/icons/clock.png",
+
+  // Row 2
+  天気: "/icons/weather.png",
+  Weather: "/icons/weather.png",
+  リマインダー: "/icons/reminders.png",
+  Reminders: "/icons/reminders.png",
+  "App Store": "/icons/app_store.png",
+  ヘルスケア: "/icons/health.png",
+  Health: "/icons/health.png",
+
+  // Row 3
+  ホーム: "/icons/home.png",
+  Home: "/icons/home.png",
+  Wallet: "/icons/wallet.png",
+  設定: "/icons/settings.png",
+  Settings: "/icons/settings.png",
+
+  // Dock
+  電話: "/icons/phone.png",
+  Phone: "/icons/phone.png",
+  Safari: "/icons/safari.png",
+  メッセージ: "/icons/messages.png",
+  Messages: "/icons/messages.png",
+  ミュージック: "/icons/music.png",
+  Music: "/icons/music.png",
+
+  // Social & Extras
+  X: "/icons/x.png",
+  Instagram: "/icons/instagram.png",
+  Facebook: "/icons/facebook.png",
+  TikTok: "/icons/tiktok.png",
+  LinkedIn: "/icons/linkedin.png",
+  YouTube: "/icons/youtube.png",
+  Spotify: "/icons/spotify.png",
+  Netflix: "/icons/netflix.png",
+  Twitch: "/icons/twitch.png",
+  GitHub: "/icons/github.png",
+  Notion: "/icons/notion.png",
+  Slack: "/icons/slack.png",
+  Figma: "/icons/figma.png",
+};
