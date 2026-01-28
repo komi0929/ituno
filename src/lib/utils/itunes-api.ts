@@ -174,57 +174,57 @@ export async function searchAppIcon(
  */
 export const LOCAL_APP_ICONS: Record<string, string> = {
   // Row 1
-  カレンダー: "/icons/calendar.jpg",
-  Calendar: "/icons/calendar.jpg",
-  写真: "/icons/photos.jpg",
-  Photos: "/icons/photos.jpg",
-  カメラ: "/icons/camera.jpg",
-  Camera: "/icons/camera.jpg",
-  時計: "/icons/clock.jpg",
-  Clock: "/icons/clock.jpg",
+  カレンダー: "/icons/calendar.png",
+  Calendar: "/icons/calendar.png",
+  写真: "/icons/photos.png",
+  Photos: "/icons/photos.png",
+  カメラ: "/icons/camera.png",
+  Camera: "/icons/camera.png",
+  時計: "/icons/clock.png",
+  Clock: "/icons/clock.png",
 
   // Row 2
-  天気: "/icons/weather.jpg",
-  Weather: "/icons/weather.jpg",
-  リマインダー: "/icons/reminders.jpg",
-  Reminders: "/icons/reminders.jpg",
-  "App Store": "/icons/app_store.jpg",
-  ヘルスケア: "/icons/health.jpg",
-  Health: "/icons/health.jpg",
+  天気: "/icons/weather.png",
+  Weather: "/icons/weather.png",
+  リマインダー: "/icons/reminders.png",
+  Reminders: "/icons/reminders.png",
+  "App Store": "/icons/app_store.png",
+  ヘルスケア: "/icons/health.png",
+  Health: "/icons/health.png",
 
   // Row 3
-  ホーム: "/icons/home.jpg",
-  Home: "/icons/home.jpg",
-  Wallet: "/icons/wallet.jpg",
-  設定: "/icons/settings.jpg",
-  Settings: "/icons/settings.jpg",
+  ホーム: "/icons/home.png",
+  Home: "/icons/home.png",
+  Wallet: "/icons/wallet.png",
+  設定: "/icons/settings.png",
+  Settings: "/icons/settings.png",
 
   // Dock
-  電話: "/icons/phone.jpg",
-  Phone: "/icons/phone.jpg",
-  電: "/icons/phone.jpg", // Fallback matching
-  Safari: "/icons/safari.jpg",
-  safari: "/icons/safari.jpg",
-  S: "/icons/safari.jpg", // Fallback matching
-  メッセージ: "/icons/messages.jpg",
-  Messages: "/icons/messages.jpg",
-  メ: "/icons/messages.jpg", // Fallback matching
-  ミュージック: "/icons/music.jpg",
-  Music: "/icons/music.jpg",
-  ミ: "/icons/music.jpg", // Fallback matching
+  電話: "/icons/phone.png",
+  Phone: "/icons/phone.png",
+  電: "/icons/phone.png", // Fallback matching
+  Safari: "/icons/safari.png",
+  safari: "/icons/safari.png",
+  S: "/icons/safari.png", // Fallback matching
+  メッセージ: "/icons/messages.png",
+  Messages: "/icons/messages.png",
+  メ: "/icons/messages.png", // Fallback matching
+  ミュージック: "/icons/music.png",
+  Music: "/icons/music.png",
+  ミ: "/icons/music.png", // Fallback matching
 
   // Social & Extras
-  X: "/icons/x.jpg",
-  Instagram: "/icons/instagram.jpg",
-  Facebook: "/icons/facebook.jpg",
-  TikTok: "/icons/tiktok.jpg",
-  LinkedIn: "/icons/linkedin.jpg",
-  YouTube: "/icons/youtube.jpg",
-  Spotify: "/icons/spotify.jpg",
-  Netflix: "/icons/netflix.jpg",
-  Twitch: "/icons/twitch.jpg",
-  GitHub: "/icons/github.jpg",
-  Notion: "/icons/notion.jpg",
-  Slack: "/icons/slack.jpg",
-  Figma: "/icons/figma.jpg",
+  X: "/icons/x.png",
+  Instagram: "/icons/instagram.png",
+  Facebook: "/icons/facebook.png",
+  TikTok: "/icons/tiktok.png",
+  LinkedIn: "/icons/linkedin.png",
+  YouTube: "/icons/youtube.png",
+  Spotify: "/icons/spotify.png",
+  Netflix: "/icons/netflix.png",
+  Twitch: "/icons/twitch.png",
+  GitHub: "/icons/github.png",
+  Notion: "/icons/notion.png",
+  Slack: "/icons/slack.png",
+  Figma: "/icons/figma.png",
 };
