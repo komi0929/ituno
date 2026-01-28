@@ -202,11 +202,16 @@ export const LOCAL_APP_ICONS: Record<string, string> = {
   // Dock
   電話: "/icons/phone.jpg",
   Phone: "/icons/phone.jpg",
+  電: "/icons/phone.jpg", // Fallback matching
   Safari: "/icons/safari.jpg",
+  safari: "/icons/safari.jpg",
+  S: "/icons/safari.jpg", // Fallback matching
   メッセージ: "/icons/messages.jpg",
   Messages: "/icons/messages.jpg",
+  メ: "/icons/messages.jpg", // Fallback matching
   ミュージック: "/icons/music.jpg",
   Music: "/icons/music.jpg",
+  ミ: "/icons/music.jpg", // Fallback matching
 
   // Social & Extras
   X: "/icons/x.jpg",
