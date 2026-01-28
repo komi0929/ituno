@@ -35,77 +35,76 @@ const IOS_APP_BUNDLE_IDS: Record<string, string> = {
   files: "com.apple.DocumentsApp",
 };
 
-// Pre-fetched official iOS app icon URLs from iTunes API
-// These are REAL app icons from Apple's CDN
+// Pre-fetched official iOS app icon URLs (Verified 2026-01-27)
 export const IOS_OFFICIAL_ICONS: Record<string, string> = {
-  // Row 1 - Calendar, Photos, Camera, Clock
+  // Row 1
   カレンダー:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e3/f7/82/e3f782ab-92c7-8c6a-1b8c-8e0d5e14c2d6/AppIcon-Calendar-0-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/4c/26/34/4c263435-017e-d007-4e76-35749f984a86/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/512x512bb.jpg",
   Calendar:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e3/f7/82/e3f782ab-92c7-8c6a-1b8c-8e0d5e14c2d6/AppIcon-Calendar-0-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/4c/26/34/4c263435-017e-d007-4e76-35749f984a86/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/512x512bb.jpg",
 
-  写真: "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/2f/83/5a/2f835ab4-d07c-8e9a-f1a5-c82c72e70c8c/AppIcon-Photos-0-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",
+  写真: "https://is1-ssl.mzstatic.com/image/thumb/Purple122/v4/91/e0/75/91e07502-3866-2670-651c-829928d22383/AppIcon-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
   Photos:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/2f/83/5a/2f835ab4-d07c-8e9a-f1a5-c82c72e70c8c/AppIcon-Photos-0-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple122/v4/91/e0/75/91e07502-3866-2670-651c-829928d22383/AppIcon-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
 
   カメラ:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/e1/2e/1d/e12e1d58-5b06-5881-aea8-c2e8f6d45c8c/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/91/2a/50/912a508b-6352-2591-62a9-7c27187127b4/AppIcon-0-0-1x_U007emarketing-0-0-0-2-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
   Camera:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/e1/2e/1d/e12e1d58-5b06-5881-aea8-c2e8f6d45c8c/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/91/2a/50/912a508b-6352-2591-62a9-7c27187127b4/AppIcon-0-0-1x_U007emarketing-0-0-0-2-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
 
-  時計: "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/ec/3c/1b/ec3c1b8c-fbf9-e0aa-b8e9-bf2b0a1ea6b1/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+  時計: "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/7e/8e/31/7e8e312b-3665-2244-8848-18e95082164a/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
   Clock:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/ec/3c/1b/ec3c1b8c-fbf9-e0aa-b8e9-bf2b0a1ea6b1/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/7e/8e/31/7e8e312b-3665-2244-8848-18e95082164a/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
 
-  // Row 2 - Weather, Reminders, App Store, Health
-  天気: "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/7b/c5/c9/7bc5c940-1e1c-4d5e-3a4c-3b9f4c9e7d8c/AppIcon-Weather-0-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",
+  // Row 2
+  天気: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/64/00/5e/64005e83-9b48-1823-74a9-d65e236113b2/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/512x512bb.jpg",
   Weather:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/7b/c5/c9/7bc5c940-1e1c-4d5e-3a4c-3b9f4c9e7d8c/AppIcon-Weather-0-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/64/00/5e/64005e83-9b48-1823-74a9-d65e236113b2/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/512x512bb.jpg",
 
   リマインダー:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/55/a1/bf/55a1bf6a-fc89-e0ea-fc01-67e8c10dd5f6/AppIcon-0-85-220-0-4-0-0-2x.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/71/34/3c/71343c16-0428-2169-2f5a-350711ccba4f/AppIcon-0-0-1x_U007epad-0-1-0-sRGB-85-220.png/512x512bb.jpg",
   Reminders:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/55/a1/bf/55a1bf6a-fc89-e0ea-fc01-67e8c10dd5f6/AppIcon-0-85-220-0-4-0-0-2x.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/71/34/3c/71343c16-0428-2169-2f5a-350711ccba4f/AppIcon-0-0-1x_U007epad-0-1-0-sRGB-85-220.png/512x512bb.jpg",
 
   "App Store":
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/ab/61/e6/ab61e657-4e97-18f6-b63a-2dd0e97d7bf0/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/55/a1/0a/55a10a11-5764-8849-c4ac-5cc65c5836be/AppIcon-0-0-1x_U007emarketing-0-10-0-0-85-220.png/512x512bb.jpg",
 
   ヘルスケア:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/af/87/f8/af87f858-a1fb-3c2a-e49b-f5f6f22fea91/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/05/29/72/05297241-1185-5ef8-47ac-54fefce90d0b/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
   Health:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/af/87/f8/af87f858-a1fb-3c2a-e49b-f5f6f22fea91/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/05/29/72/05297241-1185-5ef8-47ac-54fefce90d0b/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
 
-  // Row 3 - Home, Wallet, Settings
+  // Row 3
   ホーム:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/c6/b9/35/c6b93509-8a57-5867-d239-8c706a03ef5f/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
-  Home: "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/c6/b9/35/c6b93509-8a57-5867-d239-8c706a03ef5f/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/28/05/44/280544f0-4573-0941-2679-b883021f649f/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+  Home: "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/28/05/44/280544f0-4573-0941-2679-b883021f649f/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
 
   Wallet:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/90/26/a1/9026a17b-1a0d-a4bb-8c22-91b0a9e6fe21/Wallet-0-85-220-2x.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/4e/c9/76/4ec97600-4780-692a-3e4b-972175ced6df/Wallet-0-0-1x_U007emarketing-0-7-0-0-85-220.png/512x512bb.jpg",
 
-  設定: "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/6d/a8/b5/6da8b510-3a7d-3ced-d1e5-03db9f2c6e96/AppIcon-85-220-0-4-0-0-2x.png/512x512bb.jpg",
+  設定: "https://is1-ssl.mzstatic.com/image/thumb/Purple122/v4/4e/1b/47/4e1b4737-299f-fa71-5079-053644f603c4/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
   Settings:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/6d/a8/b5/6da8b510-3a7d-3ced-d1e5-03db9f2c6e96/AppIcon-85-220-0-4-0-0-2x.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple122/v4/4e/1b/47/4e1b4737-299f-fa71-5079-053644f603c4/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
 
-  // Dock Apps - Phone, Safari, Messages, Music
-  電話: "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/8a/c8/e1/8ac8e15f-e09d-6f27-6ad9-8f7aa5af2380/AppIcon-0-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",
+  // Dock
+  電話: "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/24/76/a9/2476a911-3729-c88f-6616-568853b8f101/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
   Phone:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/8a/c8/e1/8ac8e15f-e09d-6f27-6ad9-8f7aa5af2380/AppIcon-0-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/24/76/a9/2476a911-3729-c88f-6616-568853b8f101/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
 
   Safari:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/c8/d4/9c/c8d49c05-3e09-9b50-4c4c-6cc56c91da11/AppIcon-0-85-220-0-4-0-0-2x.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple112/v4/8e/3c/6e/8e3c6e98-e770-562a-dc85-2e66847053e9/AppIcon-0-0-1x_U007emarketing-0-10-0-85-220.png/512x512bb.jpg",
 
   メッセージ:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/8b/13/e3/8b13e3d5-90f0-b3f7-7d94-2fe8ef0e11cc/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/e5/23/e6/e523e634-1188-d56e-63f5-7973d9d6852a/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
   Messages:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/8b/13/e3/8b13e3d5-90f0-b3f7-7d94-2fe8ef0e11cc/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/e5/23/e6/e523e634-1188-d56e-63f5-7973d9d6852a/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
 
   ミュージック:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/02/b5/96/02b5963a-bafb-5d1a-4e3a-c9f79de04f19/AppIcon-0-85-220-0-4-0-0-2x.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/d5/45/2c/d5452c5c-3f2d-450b-bb9f-50d4f40f04c6/AppIcon-0-0-1x_U007emarketing-0-5-0-0-85-220.png/512x512bb.jpg",
   Music:
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/02/b5/96/02b5963a-bafb-5d1a-4e3a-c9f79de04f19/AppIcon-0-85-220-0-4-0-0-2x.png/512x512bb.jpg",
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/d5/45/2c/d5452c5c-3f2d-450b-bb9f-50d4f40f04c6/AppIcon-0-0-1x_U007emarketing-0-5-0-0-85-220.png/512x512bb.jpg",
 
-  // Social & Tools (Official App Store Icons)
+  // Social & Others
   X: "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/49/6d/a3/496da349-0c98-e7cb-1f66-f1e9c1dfeed5/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
   Instagram:
     "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/79/7d/57/797d5700-fd51-df39-39e9-c15ea8ea1b50/Prod-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
