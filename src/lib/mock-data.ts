@@ -1,5 +1,4 @@
 import { Database } from "@/lib/types/schema";
-import { LOCAL_APP_ICONS } from "@/lib/utils/itunes-api";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type Link = Database["public"]["Tables"]["links"]["Row"];
@@ -22,14 +21,7 @@ export const MOCK_PROFILE: Profile = {
 };
 
 /**
- * Demo links using OFFICIAL iOS App Store icons
- * Icons fetched from Apple's mzstatic.com CDN
- *
- * Layout matches reference image:
- * Row 1: カレンダー, 写真, カメラ, 時計
- * Row 2: 天気, リマインダー, App Store, ヘルスケア
- * Row 3: ホーム, Wallet, 設定
- * Dock: 電話, Safari, メッセージ, ミュージック
+ * Demo links with LOCAL icon paths (hardcoded)
  */
 export const MOCK_LINKS: Link[] = [
   // Row 1
@@ -38,7 +30,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "カレンダー",
     url: "https://apple.com/calendar",
-    icon_url: LOCAL_APP_ICONS["カレンダー"],
+    icon_url: "/icons/calendar.jpg",
     is_docked: false,
     sort_order: 0,
     created_at: new Date().toISOString(),
@@ -48,7 +40,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "写真",
     url: "https://apple.com/photos",
-    icon_url: LOCAL_APP_ICONS["写真"],
+    icon_url: "/icons/photos.jpg",
     is_docked: false,
     sort_order: 1,
     created_at: new Date().toISOString(),
@@ -58,7 +50,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "カメラ",
     url: "https://apple.com/camera",
-    icon_url: LOCAL_APP_ICONS["カメラ"],
+    icon_url: "/icons/camera.jpg",
     is_docked: false,
     sort_order: 2,
     created_at: new Date().toISOString(),
@@ -68,7 +60,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "時計",
     url: "https://apple.com/clock",
-    icon_url: LOCAL_APP_ICONS["時計"],
+    icon_url: "/icons/clock.jpg",
     is_docked: false,
     sort_order: 3,
     created_at: new Date().toISOString(),
@@ -80,7 +72,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "天気",
     url: "https://weather.apple.com",
-    icon_url: LOCAL_APP_ICONS["天気"],
+    icon_url: "/icons/weather.jpg",
     is_docked: false,
     sort_order: 4,
     created_at: new Date().toISOString(),
@@ -90,7 +82,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "リマインダー",
     url: "https://apple.com/reminders",
-    icon_url: LOCAL_APP_ICONS["リマインダー"],
+    icon_url: "/icons/reminders.jpg",
     is_docked: false,
     sort_order: 5,
     created_at: new Date().toISOString(),
@@ -100,7 +92,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "App Store",
     url: "https://apps.apple.com",
-    icon_url: LOCAL_APP_ICONS["App Store"],
+    icon_url: "/icons/app_store.jpg",
     is_docked: false,
     sort_order: 6,
     created_at: new Date().toISOString(),
@@ -110,7 +102,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "ヘルスケア",
     url: "https://apple.com/health",
-    icon_url: LOCAL_APP_ICONS["ヘルスケア"],
+    icon_url: "/icons/health.jpg",
     is_docked: false,
     sort_order: 7,
     created_at: new Date().toISOString(),
@@ -122,7 +114,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "ホーム",
     url: "https://apple.com/home",
-    icon_url: LOCAL_APP_ICONS["ホーム"],
+    icon_url: "/icons/home.jpg",
     is_docked: false,
     sort_order: 8,
     created_at: new Date().toISOString(),
@@ -132,7 +124,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "Wallet",
     url: "https://apple.com/wallet",
-    icon_url: LOCAL_APP_ICONS["Wallet"],
+    icon_url: "/icons/wallet.jpg",
     is_docked: false,
     sort_order: 9,
     created_at: new Date().toISOString(),
@@ -142,7 +134,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "設定",
     url: "https://apple.com/settings",
-    icon_url: LOCAL_APP_ICONS["設定"],
+    icon_url: "/icons/settings.jpg",
     is_docked: false,
     sort_order: 10,
     created_at: new Date().toISOString(),
@@ -154,7 +146,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "電話",
     url: "tel:+1234567890",
-    icon_url: LOCAL_APP_ICONS["電話"],
+    icon_url: "/icons/phone.jpg",
     is_docked: true,
     sort_order: 0,
     created_at: new Date().toISOString(),
@@ -164,7 +156,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "Safari",
     url: "https://apple.com/safari",
-    icon_url: LOCAL_APP_ICONS["Safari"],
+    icon_url: "/icons/safari.jpg",
     is_docked: true,
     sort_order: 1,
     created_at: new Date().toISOString(),
@@ -174,7 +166,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "メッセージ",
     url: "https://apple.com/messages",
-    icon_url: LOCAL_APP_ICONS["メッセージ"],
+    icon_url: "/icons/messages.jpg",
     is_docked: true,
     sort_order: 2,
     created_at: new Date().toISOString(),
@@ -184,7 +176,7 @@ export const MOCK_LINKS: Link[] = [
     user_id: "mock-user-id",
     title: "ミュージック",
     url: "https://music.apple.com",
-    icon_url: LOCAL_APP_ICONS["ミュージック"],
+    icon_url: "/icons/music.jpg",
     is_docked: true,
     sort_order: 3,
     created_at: new Date().toISOString(),
