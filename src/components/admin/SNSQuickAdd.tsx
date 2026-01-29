@@ -2,7 +2,6 @@
 
 import { LOCAL_APP_ICONS } from "@/lib/utils/itunes-api";
 import { Plus } from "lucide-react";
-import Image from "next/image";
 
 interface SNSQuickAddProps {
   onAdd: (title: string, url: string, iconUrl: string) => void;
@@ -16,11 +15,7 @@ const PRESETS = [
     url: "https://instagram.com/",
     icon: LOCAL_APP_ICONS.Instagram,
   },
-  {
-    name: "TikTok",
-    url: "https://tiktok.com/",
-    icon: LOCAL_APP_ICONS.TikTok,
-  },
+  { name: "TikTok", url: "https://tiktok.com/", icon: LOCAL_APP_ICONS.TikTok },
   {
     name: "YouTube",
     url: "https://youtube.com/",
@@ -32,11 +27,7 @@ const PRESETS = [
     icon: LOCAL_APP_ICONS.Threads,
   },
   { name: "Note", url: "https://note.com/", icon: LOCAL_APP_ICONS.Note },
-  {
-    name: "GitHub",
-    url: "https://github.com/",
-    icon: LOCAL_APP_ICONS.GitHub,
-  },
+  { name: "GitHub", url: "https://github.com/", icon: LOCAL_APP_ICONS.GitHub },
 ];
 
 export function SNSQuickAdd({ onAdd, disabled }: SNSQuickAddProps) {
@@ -55,13 +46,11 @@ export function SNSQuickAdd({ onAdd, disabled }: SNSQuickAddProps) {
             title={`${app.name}を追加`}
           >
             <div className="absolute inset-0 overflow-hidden rounded-[14px] shadow-sm">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={app.icon}
                 alt={app.name}
-                fill
-                sizes="56px"
-                className="object-cover transition-transform group-hover:scale-105"
-                unoptimized // Use unoptimized to avoid potential upstream optimization issues with Apple's CDN if strict
+                className="h-full w-full object-cover transition-transform group-hover:scale-105"
               />
             </div>
             <div className="absolute inset-0 flex items-center justify-center rounded-[14px] bg-black/0 transition-colors group-hover:bg-black/10">

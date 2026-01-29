@@ -18,5 +18,7 @@
             - /placeholder: ••••••••
       - button "ログイン" [ref=e15]
       - button "アカウントを作成する" [ref=e17]
-  - alert [ref=e18]
+  - button "Open Next.js Dev Tools" [ref=e23] [cursor=pointer]:
+    - img [ref=e24]
+  - alert [ref=e27]
 ```
