@@ -16,7 +16,7 @@ export default async function Page({
   const supabase = await createClient();
 
   // Demo mode - use mock data when Supabase is not configured
-  if (!supabase || username === "demo") {
+  if (!supabase) {
     return (
       <PublicProfile serverProfile={MOCK_PROFILE} serverLinks={MOCK_LINKS} />
     );
