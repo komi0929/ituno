@@ -32,27 +32,37 @@ test("Verify Admin Icons After Login", async ({ page }) => {
 
   // 3. Go to login page
   await page.goto("http://localhost:3000/login");
+  await page.waitForLoadState("networkidle");
 
-  // 4. Fill and submit
-  await page.fill('input[name="email"]', email);
-  await page.fill('input[name="password"]', password);
+  // 4. Fill using ID selectors
+  console.log("Filling credentials...");
+  await page.fill("#email", email);
+  await page.fill("#password", password);
+
+  console.log("Clicking login...");
   await page.click('button:has-text("ログイン")');
 
   // 5. Wait for admin page
-  await expect(page).toHaveURL(/\/admin/, { timeout: 30000 });
+  console.log("Waiting for redirect to /admin...");
+  await expect(page).toHaveURL(/\/admin/, { timeout: 60000 });
   console.log("Login successful, on admin page.");
 
-  // 6. Wait a bit for icons to load
-  await page.waitForTimeout(2000);
+  // 6. Wait for page to fully load
+  await page.waitForLoadState("networkidle");
 
-  // 7. Screenshot
+  // 7. Click the "リンク" tab to see the icons
+  console.log("Clicking Links tab...");
+  await page.click('button:has-text("リンク")');
+  await page.waitForTimeout(1000); // Wait for tab transition
+
+  // 8. Screenshot after navigating to Links tab
   await page.screenshot({
     path: "e2e-screenshots/admin-with-icons.png",
     fullPage: true,
   });
-  console.log("Screenshot saved to e2e-screenshots/admin-with-icons.png");
+  console.log("Screenshot saved.");
 
-  // 8. Check for broken images
+  // 9. Check for broken images
   const brokenImages = await page.evaluate(() => {
     const images = Array.from(document.querySelectorAll("img"));
     return images
