@@ -2,6 +2,7 @@
 
 import { IOS_OFFICIAL_ICONS } from "@/lib/utils/itunes-api";
 import { Plus } from "lucide-react";
+import Image from "next/image";
 
 interface SNSQuickAddProps {
   onAdd: (title: string, url: string, iconUrl: string) => void;
@@ -54,10 +55,13 @@ export function SNSQuickAdd({ onAdd, disabled }: SNSQuickAddProps) {
             title={`${app.name}を追加`}
           >
             <div className="absolute inset-0 overflow-hidden rounded-[14px] shadow-sm">
-              <img
+              <Image
                 src={app.icon}
                 alt={app.name}
-                className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                fill
+                sizes="56px"
+                className="object-cover transition-transform group-hover:scale-105"
+                unoptimized // Use unoptimized to avoid potential upstream optimization issues with Apple's CDN if strict
               />
             </div>
             <div className="absolute inset-0 flex items-center justify-center rounded-[14px] bg-black/0 transition-colors group-hover:bg-black/10">

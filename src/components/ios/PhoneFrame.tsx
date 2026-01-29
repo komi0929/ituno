@@ -28,7 +28,7 @@ export function PhoneFrame({ children, className, ...props }: PhoneFrameProps) {
         - Only visible on larger screens where we need the "Phone" look
         - Adds shadow, border, and rounded corners matching iOS 17
       */}
-      <div className="relative h-full w-full max-w-[430px] lg:h-[932px] lg:max-h-[95vh]">
+      <div className="relative h-full w-full max-w-[430px] min-w-[375px] lg:min-w-[430px] lg:h-[932px] lg:max-h-[95vh]">
         {/* The Device Frame (Bezel) */}
         <div className="pointer-events-none absolute inset-0 z-50 hidden rounded-[60px] border-[8px] border-[#444444] shadow-2xl lg:block ring-1 ring-white/10">
           {/* Inner Bezel (Screen border) */}
