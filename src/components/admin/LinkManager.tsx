@@ -20,8 +20,9 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Loader2, Plus, Trash2 } from "lucide-react";
+import { GripVertical, Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { SNSQuickAdd } from "./SNSQuickAdd";
 
 type Link = Database["public"]["Tables"]["links"]["Row"];
 type LinkInsert = Database["public"]["Tables"]["links"]["Insert"];
@@ -173,6 +174,7 @@ export function LinkManager({
   onLinksChange,
 }: LinkManagerProps) {
   const [isAdding, setIsAdding] = useState(false);
+  const [customUrl, setCustomUrl] = useState("");
   const supabase = createClient();
 
   const sensors = useSensors(
@@ -182,14 +184,31 @@ export function LinkManager({
     }),
   );
 
-  const handleAddLink = async () => {
+  const handleAddLink = async (
+    title = "新しいリンク",
+    url = "",
+    iconUrl = "",
+    isCustom = false,
+  ) => {
     setIsAdding(true);
     try {
+      // If custom URL provided, try to fetch metadata first
+      let finalTitle = title;
+      let finalIcon = iconUrl;
+
+      if (isCustom && url) {
+        const metadata = await fetchUrlMetadata(url);
+        if (metadata) {
+          finalTitle = metadata.title || title;
+          finalIcon = metadata.icon_url || iconUrl;
+        }
+      }
+
       const newLink: LinkInsert = {
         user_id: userId,
-        title: "新しいリンク",
-        url: "", // Empty by default now to encourage pasting
-        icon_url: "",
+        title: finalTitle,
+        url: url,
+        icon_url: finalIcon,
         is_docked: false,
         sort_order: links.length,
       };
@@ -201,7 +220,10 @@ export function LinkManager({
         .single();
 
       if (error) throw error;
-      if (data) onLinksChange([...links, data as Link]);
+      if (data) {
+        onLinksChange([...links, data as Link]);
+        setCustomUrl(""); // Clear input if successful
+      }
     } catch (err) {
       console.error("Failed to add link:", err);
     } finally {
@@ -210,18 +232,12 @@ export function LinkManager({
   };
 
   const handleUpdateLink = async (id: string, updates: Partial<Link>) => {
-    // Optimistic update
     onLinksChange(links.map((l) => (l.id === id ? { ...l, ...updates } : l)));
-
-    // Persist to DB
     await (supabase.from("links") as any).update(updates).eq("id", id);
   };
 
   const handleDeleteLink = async (id: string) => {
-    // Optimistic update
     onLinksChange(links.filter((l) => l.id !== id));
-
-    // Persist to DB
     await (supabase.from("links") as any).delete().eq("id", id);
   };
 
@@ -235,8 +251,6 @@ export function LinkManager({
         sort_order: i,
       }));
       onLinksChange(newLinks);
-
-      // Batch update sort_order in DB
       for (const link of newLinks) {
         await (supabase.from("links") as any)
           .update({ sort_order: link.sort_order })
@@ -247,29 +261,53 @@ export function LinkManager({
 
   return (
     <div className="mx-auto max-w-2xl space-y-8 py-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight text-white">
-            リンク管理
-          </h2>
-          <p className="mt-1 text-sm text-zinc-400">
-            ホーム画面に表示するアプリやリンクを管理します。
-          </p>
-        </div>
-        <button
-          onClick={handleAddLink}
-          disabled={isAdding}
-          className="flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 lg:px-4 lg:py-2 text-base lg:text-sm font-medium text-white transition-all hover:bg-blue-500 hover:shadow-lg disabled:opacity-50"
-        >
-          {isAdding ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Plus className="h-4 w-4" />
-          )}
-          リンクを追加
-        </button>
+      <div>
+        <h2 className="text-2xl font-bold tracking-tight text-white">
+          リンク管理
+        </h2>
+        <p className="mt-1 text-sm text-zinc-400">
+          iPhoneホーム画面のように、リンクを管理できます。
+        </p>
       </div>
 
+      {/* 1. Review & Add Presets */}
+      <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6 backdrop-blur-xl">
+        <SNSQuickAdd
+          onAdd={(title, url, icon) => handleAddLink(title, url, icon)}
+          disabled={isAdding}
+        />
+
+        <div className="my-6 h-px w-full bg-zinc-800/50" />
+
+        <div className="space-y-3">
+          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+            またはURLから追加
+          </label>
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={customUrl}
+              onChange={(e) => setCustomUrl(e.target.value)}
+              placeholder="https://mysite.com"
+              className="flex-1 rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-white placeholder-zinc-500 transition-colors focus:border-blue-500 focus:outline-none"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && customUrl) {
+                  handleAddLink("新しいリンク", customUrl, "", true);
+                }
+              }}
+            />
+            <button
+              onClick={() => handleAddLink("新しいリンク", customUrl, "", true)}
+              disabled={!customUrl || isAdding}
+              className="flex items-center gap-2 rounded-xl bg-white px-6 font-bold text-black transition-transform hover:scale-105 active:scale-95 disabled:opacity-50"
+            >
+              {isAdding ? <Loader2 className="h-5 w-5 animate-spin" /> : "追加"}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Sortable List */}
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -291,14 +329,8 @@ export function LinkManager({
 
       {links.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/30 py-20 text-center">
-          <div className="rounded-full bg-zinc-800 p-4">
-            <Plus className="h-6 w-6 text-zinc-500" />
-          </div>
-          <h3 className="mt-4 text-sm font-medium text-white">
-            リンクがありません
-          </h3>
-          <p className="mt-1 text-sm text-zinc-500">
-            「リンクを追加」ボタンから最初のリンクを作成しましょう。
+          <p className="text-zinc-500">
+            上のボタンからSNSを追加するか、URLを入力してください。
           </p>
         </div>
       )}

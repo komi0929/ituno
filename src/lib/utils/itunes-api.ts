@@ -112,6 +112,11 @@ export const IOS_OFFICIAL_ICONS: Record<string, string> = {
     "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/04/53/1a/04531ab0-8a01-3dc7-df5f-a4e1a1c5e739/Icon-Pro-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
   TikTok:
     "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/2d/23/c7/2d23c70c-e1e6-e1b4-21a9-1af4e92f8de4/AppIcon_TikTok-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
+  LINE: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/80/77/28/807728d8-79d8-82d8-9366-22ac6c22cb90/AppIcon-0-0-1x_U007emarketing-0-10-0-85-220.png/512x512bb.jpg",
+  Threads:
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/6f/38/54/6f38541c-d784-fb4d-e6fc-38290e290f6b/AppIcon-0-0-1x_U007emarketing-0-10-0-85-220.png/512x512bb.jpg",
+  Discord:
+    "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/66/8e/31/668e3100-2f94-67e4-2453-62d499264c9d/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
   LinkedIn:
     "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/27/46/58/274658f7-f9a3-23a4-cee3-f0f64bd8c203/AppIcon-0-0-1x_U007emarketing-0-10-0-85-220.png/512x512bb.jpg",
   YouTube:
@@ -124,6 +129,7 @@ export const IOS_OFFICIAL_ICONS: Record<string, string> = {
     "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/12/f8/80/12f8802a-dbbb-7bc5-c0a3-3b7b63c7ad93/AppIcon-0-0-1x_U007emarketing-0-6-0-85-220.png/512x512bb.jpg",
   GitHub:
     "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/11/4c/30/114c3009-76b0-76a0-aac0-7ebe97c16a58/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
+  Note: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/9b/7f/75/9b7f7535-618a-dc16-c118-2ac92376997d/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
   Notion:
     "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/66/f8/0b/66f80b10-d435-d67f-8e7c-6c23b3e8e3a4/AppIcon-0-0-1x_U007emarketing-0-10-0-85-220.png/512x512bb.jpg",
   Slack:
