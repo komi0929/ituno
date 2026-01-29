@@ -28,7 +28,7 @@ import {
   SYSTEM_FONT,
 } from "@/lib/ios-constants";
 import { Database } from "@/lib/types/schema";
-import { LOCAL_APP_ICONS } from "@/lib/utils/itunes-api";
+import { getFaviconUrl } from "@/lib/utils/favicon";
 import {
   closestCenter,
   DndContext,
@@ -153,18 +153,18 @@ export function PublicProfile({
           }}
           onClick={handleBackgroundClick}
         >
-          {/* Wallpaper Layer */}
-          {themeConfig?.wallpaper && (
-            <div
-              className="absolute inset-0 z-0"
-              style={{
-                backgroundImage: `url(${themeConfig.wallpaper})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                borderRadius: SCREEN_CORNER_RADIUS,
-              }}
-            />
-          )}
+          {/* Wallpaper Layer - Default iOS gradient or custom */}
+          <div
+            className="absolute inset-0 z-0"
+            style={{
+              background: themeConfig?.wallpaper
+                ? `url(${themeConfig.wallpaper})`
+                : "linear-gradient(180deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #533483 100%)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              borderRadius: SCREEN_CORNER_RADIUS,
+            }}
+          />
 
           {/* Dynamic Island */}
           <DynamicIsland />
@@ -302,7 +302,8 @@ export function PublicProfile({
                             id={link.id}
                             title={link.title}
                             iconUrl={
-                              LOCAL_APP_ICONS[link.title] || link.icon_url
+                              link.icon_url ||
+                              (link.url ? getFaviconUrl(link.url, 128) : null)
                             }
                             isJiggling={isJiggleMode}
                             onLongPress={() => setIsJiggleMode(true)}
@@ -334,7 +335,10 @@ export function PublicProfile({
                     id={activeItem.id}
                     title={activeItem.title}
                     iconUrl={
-                      LOCAL_APP_ICONS[activeItem.title] || activeItem.icon_url
+                      activeItem.icon_url ||
+                      (activeItem.url
+                        ? getFaviconUrl(activeItem.url, 128)
+                        : null)
                     }
                     isJiggling={true}
                   />
@@ -374,7 +378,10 @@ export function PublicProfile({
                   key={link.id}
                   id={link.id}
                   title={link.title}
-                  iconUrl={LOCAL_APP_ICONS[link.title] || link.icon_url}
+                  iconUrl={
+                    link.icon_url ||
+                    (link.url ? getFaviconUrl(link.url, 128) : null)
+                  }
                   isJiggling={isJiggleMode}
                   onLongPress={() => setIsJiggleMode(true)}
                   onClick={() =>

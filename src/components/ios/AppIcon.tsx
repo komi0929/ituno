@@ -75,8 +75,6 @@ export function AppIcon({
               alt={title}
               className="absolute inset-0 h-full w-full object-cover"
               draggable={false}
-              crossOrigin="anonymous"
-              referrerPolicy="no-referrer"
               onError={(e) => {
                 e.currentTarget.style.display = "none";
                 const fallback = e.currentTarget
@@ -181,8 +179,6 @@ export function DockIcon({
             alt={title}
             className="absolute inset-0 h-full w-full object-cover"
             draggable={false}
-            crossOrigin="anonymous"
-            referrerPolicy="no-referrer"
             onError={(e) => {
               e.currentTarget.style.display = "none";
               const fallback = e.currentTarget

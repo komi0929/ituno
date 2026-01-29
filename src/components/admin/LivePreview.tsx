@@ -7,10 +7,14 @@ import { PhoneFrame } from "@/components/ios/PhoneFrame";
 import { SquircleDefs } from "@/components/ios/SquircleDefs";
 import { StatusBar } from "@/components/ios/StatusBar";
 import { Database } from "@/lib/types/schema";
-import { LOCAL_APP_ICONS } from "@/lib/utils/itunes-api";
+import { getFaviconUrl } from "@/lib/utils/favicon";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type Link = Database["public"]["Tables"]["links"]["Row"];
+
+interface ThemeConfig {
+  wallpaper?: string;
+}
 
 interface LivePreviewProps {
   profile: Profile | null;
@@ -25,38 +29,43 @@ export function LivePreview({ profile, links }: LivePreviewProps) {
     .filter((l) => l.is_docked)
     .sort((a, b) => a.sort_order - b.sort_order);
 
+  const themeConfig = profile?.theme_config as unknown as ThemeConfig;
   const wallpaper =
-    (profile?.theme_config as any)?.wallpaper ||
-    "https://images.unsplash.com/photo-1695503348386-2a7444c979d5?q=80&w=2670";
+    themeConfig?.wallpaper ||
+    "linear-gradient(180deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #533483 100%)";
 
   return (
     <PhoneFrame>
+      <SquircleDefs />
       <div
-        className="relative h-full w-full bg-cover bg-center"
-        style={{ backgroundImage: `url(${wallpaper})` }}
+        className="relative h-full w-full overflow-hidden"
+        style={{
+          background: wallpaper.startsWith("http")
+            ? `url(${wallpaper})`
+            : wallpaper,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
       >
-        {/* Status Bar */}
+        <DynamicIsland />
         <StatusBar />
-        <SquircleDefs />
 
-        {/* Dynamic Island */}
-        <div className="flex w-full justify-center pt-2">
-          <DynamicIsland />
-        </div>
-
-        {/* Profile Info (Optional) */}
-        {profile?.full_name && (
-          <div className="mt-4 flex flex-col items-center gap-2 px-4">
+        {/* Profile Header (optional) */}
+        {profile && (
+          <div className="mt-20 flex flex-col items-center px-4">
             {profile.avatar_url && (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={profile.avatar_url}
-                alt={profile.full_name}
-                className="h-16 w-16 rounded-full border-2 border-white/20 object-cover shadow-lg"
+                alt={profile.full_name || ""}
+                className="h-16 w-16 rounded-full object-cover shadow-lg"
               />
             )}
-            <h2 className="text-lg font-semibold text-white drop-shadow-md">
-              {profile.full_name}
-            </h2>
+            {profile.full_name && (
+              <h1 className="mt-2 text-lg font-semibold text-white drop-shadow-md">
+                {profile.full_name}
+              </h1>
+            )}
             {profile.bio && (
               <p className="text-center text-sm text-white/80 drop-shadow-md">
                 {profile.bio}
@@ -72,7 +81,10 @@ export function LivePreview({ profile, links }: LivePreviewProps) {
               key={link.id}
               id={link.id}
               title={link.title}
-              iconUrl={LOCAL_APP_ICONS[link.title] || link.icon_url}
+              iconUrl={
+                link.icon_url ||
+                (link.url ? getFaviconUrl(link.url, 128) : null)
+              }
             />
           ))}
         </div>
@@ -85,7 +97,10 @@ export function LivePreview({ profile, links }: LivePreviewProps) {
                 key={link.id}
                 id={link.id}
                 title={link.title}
-                iconUrl={LOCAL_APP_ICONS[link.title] || link.icon_url}
+                iconUrl={
+                  link.icon_url ||
+                  (link.url ? getFaviconUrl(link.url, 128) : null)
+                }
               />
             ))}
           </Dock>
