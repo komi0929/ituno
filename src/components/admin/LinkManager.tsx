@@ -224,8 +224,9 @@ export function LinkManager({
         onLinksChange([...links, data as Link]);
         setCustomUrl(""); // Clear input if successful
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to add link:", err);
+      alert(`追加に失敗しました: ${err.message || "不明なエラー"}`);
     } finally {
       setIsAdding(false);
     }

@@ -15,23 +15,34 @@ async function downloadFile(url: string, filename: string): Promise<void> {
 
     // No headers (mimic debug script success)
     https
-      .get(url, (response) => {
-        if (response.statusCode !== 200) {
-          reject(
-            new Error(
-              `Failed to consume ${url}: Status Code ${response.statusCode}`,
-            ),
-          );
-          return;
-        }
-        response.pipe(file);
-        file.on("finish", () => {
-          file.close(() => {
-            console.log(`✅ Downloaded: ${filename}`);
-            resolve();
+      .get(
+        url,
+        {
+          headers: {
+            "User-Agent":
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            Accept:
+              "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+          },
+        },
+        (response) => {
+          if (response.statusCode !== 200) {
+            reject(
+              new Error(
+                `Failed to consume ${url}: Status Code ${response.statusCode}`,
+              ),
+            );
+            return;
+          }
+          response.pipe(file);
+          file.on("finish", () => {
+            file.close(() => {
+              console.log(`✅ Downloaded: ${filename}`);
+              resolve();
+            });
           });
-        });
-      })
+        },
+      )
       .on("error", (err) => {
         fs.unlink(path.join(DOWNLOAD_DIR, filename), () => {});
         reject(err);

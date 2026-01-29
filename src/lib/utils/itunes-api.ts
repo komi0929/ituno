@@ -230,6 +230,7 @@ export const LOCAL_APP_ICONS: Record<string, string> = {
   Netflix: "/icons/netflix.png",
   Twitch: "/icons/twitch.png",
   GitHub: "/icons/github.png",
+  Note: "/icons/note.png",
   Notion: "/icons/notion.png",
   Slack: "/icons/slack.png",
   Figma: "/icons/figma.png",

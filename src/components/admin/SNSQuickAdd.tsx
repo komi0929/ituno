@@ -1,6 +1,6 @@
 "use client";
 
-import { IOS_OFFICIAL_ICONS } from "@/lib/utils/itunes-api";
+import { LOCAL_APP_ICONS } from "@/lib/utils/itunes-api";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 
@@ -10,32 +10,32 @@ interface SNSQuickAddProps {
 }
 
 const PRESETS = [
-  { name: "X", url: "https://twitter.com/", icon: IOS_OFFICIAL_ICONS.X },
+  { name: "X", url: "https://twitter.com/", icon: LOCAL_APP_ICONS.X },
   {
     name: "Instagram",
     url: "https://instagram.com/",
-    icon: IOS_OFFICIAL_ICONS.Instagram,
+    icon: LOCAL_APP_ICONS.Instagram,
   },
   {
     name: "TikTok",
     url: "https://tiktok.com/",
-    icon: IOS_OFFICIAL_ICONS.TikTok,
+    icon: LOCAL_APP_ICONS.TikTok,
   },
   {
     name: "YouTube",
     url: "https://youtube.com/",
-    icon: IOS_OFFICIAL_ICONS.YouTube,
+    icon: LOCAL_APP_ICONS.YouTube,
   },
   {
     name: "Threads",
     url: "https://threads.net/",
-    icon: IOS_OFFICIAL_ICONS.Threads,
+    icon: LOCAL_APP_ICONS.Threads,
   },
-  { name: "Note", url: "https://note.com/", icon: IOS_OFFICIAL_ICONS.Note },
+  { name: "Note", url: "https://note.com/", icon: LOCAL_APP_ICONS.Note },
   {
     name: "GitHub",
     url: "https://github.com/",
-    icon: IOS_OFFICIAL_ICONS.GitHub,
+    icon: LOCAL_APP_ICONS.GitHub,
   },
 ];
 
