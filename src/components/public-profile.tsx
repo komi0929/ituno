@@ -241,7 +241,7 @@ export function PublicProfile({
                     border: `1.5px solid ${STATUS_BAR_TEXT_COLOR}`,
                   }}
                 >
-                  {/* Battery fill - Yellow */}
+                  {/* Battery fill - White (normal mode) */}
                   <div
                     style={{
                       position: "absolute",
@@ -250,7 +250,7 @@ export function PublicProfile({
                       bottom: 2,
                       width: 17,
                       borderRadius: 1.5,
-                      backgroundColor: "#FFD60A",
+                      backgroundColor: STATUS_BAR_TEXT_COLOR,
                     }}
                   />
                 </div>
