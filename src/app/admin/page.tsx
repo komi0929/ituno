@@ -1,11 +1,10 @@
-
-import { AdminDashboard } from "@/components/admin/AdminDashboard"
-import { createClient } from "@/lib/supabase/server"
-import Link from "next/link"
-import { redirect } from "next/navigation"
+import { AdminDashboard } from "@/components/admin/AdminDashboard";
+import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function AdminPage() {
-  const supabase = await createClient()
+  const supabase = await createClient();
 
   // Demo mode - show demo admin with mock data
   if (!supabase) {
@@ -19,7 +18,7 @@ export default async function AdminPage() {
           `.env.local` に以下を設定してください:
         </p>
         <pre className="mt-2 rounded-lg bg-zinc-800 p-4 text-left text-xs text-zinc-300">
-{`NEXT_PUBLIC_SUPABASE_URL=your_url
+          {`NEXT_PUBLIC_SUPABASE_URL=your_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key`}
         </pre>
         <Link
@@ -29,13 +28,15 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key`}
           デモページを見る
         </Link>
       </div>
-    )
+    );
   }
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login")
+    redirect("/login");
   }
 
   // Fetch user's profile and links
@@ -43,19 +44,48 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key`}
     .from("profiles")
     .select("*")
     .eq("id", user.id)
-    .single()
+    .single();
+
+  // Auto-create profile if not exists (Self-healing)
+  let currentProfile = profile;
+  if (!currentProfile) {
+    const baseName = user.email ? user.email.split("@")[0] : "user";
+    // Remove invalid characters for username
+    const safeName = baseName.replace(/[^a-zA-Z0-9_-]/g, "");
+    const uniqueUsername = `${safeName}-${user.id.substring(0, 8)}`;
+
+    const { data: newProfile, error: createError } = await supabase
+      .from("profiles")
+      .insert({
+        id: user.id,
+        username: uniqueUsername,
+        full_name: "ゲストユーザー",
+        theme_config: { textColor: "#ffffff", wallpaper: "" },
+      } as any)
+      .select()
+      .single();
+
+    if (createError) {
+      console.error("Failed to auto-create profile:", createError);
+      // If creation fails (e.g. conflict), we might want to handle it or just let the dashboard load with null
+      // But LinkManager needs a profile to exist for foreign key.
+      // For now, allow valid dashboard rendering, but warn user.
+    } else {
+      currentProfile = newProfile;
+    }
+  }
 
   const { data: links } = await supabase
     .from("links")
     .select("*")
     .eq("user_id", user.id)
-    .order("sort_order", { ascending: true })
+    .order("sort_order", { ascending: true });
 
   return (
     <AdminDashboard
       user={user}
-      initialProfile={profile}
+      initialProfile={currentProfile || profile}
       initialLinks={links || []}
     />
-  )
+  );
 }
