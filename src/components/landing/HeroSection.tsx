@@ -1,84 +1,62 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 export function HeroSection() {
   return (
-    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#000000] pt-[52px]">
-      {/* Background Glow */}
-      <div className="absolute top-[-20%] h-[500px] w-[500px] rounded-full bg-blue-500/20 blur-[120px]" />
+    <section className="bg-white pt-[44px] overflow-hidden">
+      {/* Unit Container */}
+      <div className="w-full flex flex-col items-center pt-12 pb-0 md:pt-16 text-center">
+        {/* Headline Cluster (Japanese) */}
+        <h2 className="text-[32px] md:text-[56px] font-semibold tracking-tight text-[#1d1d1f] leading-[1.1] animate-fade-in-up">
+          itone
+        </h2>
+        <h3 className="mt-1 md:mt-2 text-[19px] md:text-[28px] font-normal text-[#1d1d1f] animate-fade-in-up delay-100">
+          あなたのポートフォリオを、再発明する。
+        </h3>
 
-      <div className="z-10 flex flex-col items-center px-4 text-center">
-        {/* Badge */}
-        <div className="mb-6 animate-fade-in-up md:mb-8">
-          <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-medium text-white/80 backdrop-blur-md">
-            New Release <ChevronRight className="h-3 w-3 text-white/50" />
-          </span>
-        </div>
-
-        {/* Headline */}
-        <h1 className="animate-fade-in-up max-w-[800px] text-5xl font-bold tracking-tight text-[#f5f5f7] md:text-7xl lg:text-8xl">
-          Your Portfolio.
-          <br />
-          <span className="bg-gradient-to-r from-[#2997ff] to-[#bd34fe] bg-clip-text text-transparent">
-            Reimagined.
-          </span>
-        </h1>
-
-        {/* Subtitle */}
-        <p className="animate-fade-in-up delay-100 mt-6 max-w-[600px] text-lg font-medium leading-relaxed text-[#86868b] md:text-xl">
-          Transform your links into a stunning iOS-style home screen.
-          <br className="hidden md:block" />
-          Simple, beautiful, and uniquely yours.
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="animate-fade-in-up delay-200 mt-10 flex flex-col gap-4 sm:flex-row">
-          <Link
-            href="/login"
-            className="rounded-full bg-[#2997ff] px-8 py-3 text-[17px] font-medium text-white transition-transform hover:scale-105 active:scale-95"
-          >
-            Create yours
-          </Link>
+        {/* CTA Links (Japanese) */}
+        <div className="mt-4 flex items-center gap-6 animate-fade-in-up delay-200">
           <Link
             href="/demo"
-            className="group flex items-center justify-center gap-1 rounded-full border border-[#2997ff] px-8 py-3 text-[17px] font-medium text-[#2997ff] transition-colors hover:bg-[#2997ff] hover:text-white"
+            className="text-[#0066cc] hover:underline text-[17px] md:text-[21px] flex items-center gap-0.5 group"
           >
-            View Demo{" "}
-            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            さらに詳しく{" "}
+            <span className="text-[14px] group-hover:translate-x-0.5 transition-transform">
+              ﹥
+            </span>
+          </Link>
+          <Link
+            href="/login"
+            className="text-[#0066cc] hover:underline text-[17px] md:text-[21px] flex items-center gap-0.5 group"
+          >
+            購入{" "}
+            <span className="text-[14px] group-hover:translate-x-0.5 transition-transform">
+              ﹥
+            </span>
           </Link>
         </div>
 
-        {/* Visual / Mockup Area */}
-        <div className="animate-fade-in-up delay-300 mt-20 relative h-[400px] w-full max-w-[300px] overflow-hidden rounded-[40px] border-[8px] border-[#1d1d1f] bg-black shadow-2xl md:h-[600px] md:max-w-[350px]">
-          {/* Mockup Screen Content (Abstract representation of iOS Home) */}
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1697525624773-637dc4363495?q=80&w=2669&auto=format&fit=crop')",
-            }}
-          >
-            <div className="absolute inset-0 bg-black/20" />
-            {/* Fake App Icons Grid */}
-            <div className="grid grid-cols-4 gap-4 p-6 mt-12">
-              {[...Array(12)].map((_, i) => (
-                <div
-                  key={i}
-                  className="aspect-square rounded-[14px] bg-white/10 backdrop-blur-md"
-                />
-              ))}
-            </div>
-
-            {/* Lower Dock */}
-            <div className="absolute bottom-6 left-4 right-4 h-24 rounded-[24px] bg-white/10 backdrop-blur-xl border border-white/10 flex items-center justify-around px-2">
-              {[...Array(4)].map((_, i) => (
-                <div
-                  key={i}
-                  className="aspect-square w-12 rounded-[12px] bg-gradient-to-b from-blue-400 to-blue-600"
-                />
-              ))}
+        {/* Hero Image Container */}
+        <div className="mt-10 md:mt-12 relative w-full flex justify-center animate-fade-in-up delay-300">
+          {/* Mockup - Modern White iPhone Style */}
+          <div className="h-[450px] w-[260px] md:h-[650px] md:w-[320px] rounded-t-[40px] border-t-[10px] border-x-[10px] border-[#1d1d1f] bg-black relative overflow-hidden shadow-[0_-20px_50px_-10px_rgba(0,0,0,0.1)]">
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage:
+                  "url('https://images.unsplash.com/photo-1621360841013-c768371e93cf?q=80&w=2540&auto=format&fit=crop')",
+              }}
+            >
+              {/* Icons - High Fidelity */}
+              <div className="mt-14 px-5 grid grid-cols-4 gap-4 opacity-90">
+                {[...Array(16)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="aspect-square rounded-[12px] bg-white/90 backdrop-blur-md shadow-sm border border-white/20"
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>

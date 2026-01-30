@@ -5,7 +5,7 @@ import { HeroSection } from "@/components/landing/HeroSection";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#fbfbfd]">
+    <div className="min-h-screen bg-white">
       <GlobalHeader />
       <main>
         <HeroSection />
