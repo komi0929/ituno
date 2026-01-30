@@ -1,69 +1,51 @@
 import Link from "next/link";
 
 export function Footer() {
+  // itone専用のフッターリンク（Appleと無関係）
   const footerSections = [
     {
-      title: "製品を知る",
+      title: "itone",
       links: [
-        "itone Pro",
-        "itone Air",
-        "itone mini",
-        "itone Classic",
-        "カスタマイズ",
-        "アクセサリ",
+        { label: "機能紹介", href: "#features" },
+        { label: "料金プラン", href: "#pricing" },
+        { label: "テンプレート", href: "/demo" },
       ],
     },
     {
-      title: "サービス",
+      title: "サポート",
       links: [
-        "Apple Music",
-        "Apple TV+",
-        "Apple Arcade",
-        "iCloud",
-        "Apple One",
-        "Apple Pay",
-        "Apple Books",
+        { label: "ヘルプセンター", href: "#" },
+        { label: "お問い合わせ", href: "#" },
+        { label: "よくある質問", href: "#" },
       ],
     },
     {
-      title: "アカウント",
-      links: ["Apple Accountの管理", "Apple Storeアカウント", "iCloud.com"],
-    },
-    {
-      title: "Apple Store",
+      title: "会社情報",
       links: [
-        "お近くのApple Store",
-        "Genius Bar",
-        "Today at Apple",
-        "Appleサマーキャンプ",
-        "ご注文状況",
-        "ご利用ガイド",
+        { label: "運営会社", href: "#" },
+        { label: "採用情報", href: "#" },
       ],
-    },
-    {
-      title: "ビジネス / 教育",
-      links: ["Appleとビジネス", "Appleと教育", "大学生活のためのMacとiPad"],
     },
   ];
 
   return (
-    <footer className="bg-[#f5f5f7] text-[11px] leading-[1.3] text-[#6e6e73] pb-10">
-      <div className="mx-auto max-w-[1024px] px-4 md:px-0">
-        <div className="w-full border-t border-[#d2d2d7] pt-10">
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-y-8 gap-x-4">
+    <footer className="bg-[#f5f5f7] text-[12px] leading-snug text-[#6e6e73] pb-8">
+      <div className="mx-auto max-w-[1024px] px-4 md:px-6">
+        <div className="w-full border-t border-[#d2d2d7] pt-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
             {footerSections.map((section) => (
               <div key={section.title}>
-                <h3 className="text-[#1d1d1f] font-semibold mb-2.5">
+                <h3 className="text-[#1d1d1f] font-semibold mb-2">
                   {section.title}
                 </h3>
                 <ul className="space-y-1.5">
                   {section.links.map((link) => (
-                    <li key={link}>
+                    <li key={link.label}>
                       <Link
-                        href="/"
+                        href={link.href}
                         className="hover:underline hover:text-[#1d1d1f] transition-colors"
                       >
-                        {link}
+                        {link.label}
                       </Link>
                     </li>
                   ))}
@@ -72,31 +54,23 @@ export function Footer() {
             ))}
           </div>
 
-          <div className="mt-10 border-t border-[#d2d2d7] pt-8 flex flex-col md:flex-row justify-between text-[#6e6e73]">
+          <div className="mt-8 border-t border-[#d2d2d7] pt-6 flex flex-col md:flex-row justify-between text-[11px] text-[#6e6e73]">
             <p className="mb-2 md:mb-0">
               Copyright © 2026 itone Inc. All rights reserved.
             </p>
-            <div className="flex flex-wrap gap-x-4 gap-y-1">
+            <div className="flex flex-wrap gap-x-3 gap-y-1">
               <Link
                 href="/privacy"
-                className="hover:underline hover:text-[#1d1d1f] border-r border-[#d2d2d7] pr-4"
+                className="hover:underline hover:text-[#1d1d1f]"
               >
                 プライバシーポリシー
               </Link>
+              <span className="text-[#d2d2d7]">|</span>
               <Link
                 href="/terms"
-                className="hover:underline hover:text-[#1d1d1f] border-r border-[#d2d2d7] pr-4"
+                className="hover:underline hover:text-[#1d1d1f]"
               >
                 利用規約
-              </Link>
-              <Link
-                href="/"
-                className="hover:underline hover:text-[#1d1d1f] border-r border-[#d2d2d7] pr-4"
-              >
-                販売条件
-              </Link>
-              <Link href="/" className="hover:underline hover:text-[#1d1d1f]">
-                サイトマップ
               </Link>
             </div>
           </div>

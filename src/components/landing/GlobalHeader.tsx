@@ -1,6 +1,6 @@
 "use client";
 
-import { Apple, Search, ShoppingBag } from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -15,18 +15,12 @@ export function GlobalHeader() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // itone専用のナビゲーション（Appleと無関係）
   const navItems = [
-    { label: "ストア", href: "/demo" },
-    { label: "Mac", href: "/demo" },
-    { label: "iPad", href: "/demo" },
-    { label: "iPhone", href: "/demo" },
-    { label: "Watch", href: "/demo" },
-    { label: "Vision", href: "/demo" },
-    { label: "AirPods", href: "/demo" },
-    { label: "TV & Home", href: "/demo" },
-    { label: "エンターテインメント", href: "/demo" },
-    { label: "アクセサリ", href: "/demo" },
-    { label: "サポート", href: "/demo" },
+    { label: "機能", href: "#features" },
+    { label: "デモ", href: "/demo" },
+    { label: "料金", href: "#pricing" },
+    { label: "サポート", href: "#support" },
   ];
 
   return (
@@ -38,34 +32,43 @@ export function GlobalHeader() {
       }`}
     >
       <div className="mx-auto flex h-[44px] max-w-[1024px] items-center justify-between px-4">
-        {/* Logo */}
+        {/* Logo - itone */}
         <Link
           href="/"
-          className="text-[#1d1d1f] hover:opacity-60 transition-opacity"
+          className="text-[18px] font-semibold text-[#1d1d1f] hover:opacity-70 transition-opacity tracking-tight"
         >
-          <Apple className="h-[18px] w-[18px] fill-current" />
+          itone
         </Link>
 
-        {/* Navigation - Desktop (Japanese) */}
-        <nav className="hidden md:flex items-center gap-5 lg:gap-7">
+        {/* Navigation - Desktop */}
+        <nav className="hidden md:flex items-center gap-8">
           {navItems.map((item) => (
             <Link
               key={item.label}
               href={item.href}
-              className="text-[12px] font-normal text-[#1d1d1f]/80 tracking-normal transition-colors hover:text-black whitespace-nowrap"
+              className="text-[12px] font-normal text-[#1d1d1f]/80 tracking-normal transition-colors hover:text-black"
             >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        {/* Icons Right */}
-        <div className="flex items-center gap-5">
-          <button className="text-[#1d1d1f] hover:opacity-60 transition-opacity">
-            <Search className="h-[16px] w-[16px]" />
-          </button>
-          <button className="text-[#1d1d1f] hover:opacity-60 transition-opacity">
-            <ShoppingBag className="h-[16px] w-[16px]" />
+        {/* Right Side */}
+        <div className="flex items-center gap-4">
+          <Link
+            href="/login"
+            className="hidden md:block text-[12px] font-normal text-[#1d1d1f]/80 hover:text-black transition-colors"
+          >
+            ログイン
+          </Link>
+          <Link
+            href="/login"
+            className="rounded-full bg-[#0071e3] px-4 py-1.5 text-[12px] font-medium text-white transition-all hover:bg-[#0077ed]"
+          >
+            無料で始める
+          </Link>
+          <button className="md:hidden text-[#1d1d1f]">
+            <Menu className="h-5 w-5" />
           </button>
         </div>
       </div>
