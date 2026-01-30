@@ -38,6 +38,14 @@ export function ImageUploader({
         const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
         const filePath = `${fileName}`;
 
+        // Check for missing configuration (Vercel env vars)
+        const supabaseUrl = (supabase as any).supabaseUrl;
+        if (supabaseUrl && supabaseUrl.includes("placeholder.supabase.co")) {
+          throw new Error(
+            "データベース設定が不足しています。Vercelの環境変数 (NEXT_PUBLIC_SUPABASE_URL) を設定してください。",
+          );
+        }
+
         // Upload to Supabase Storage 'images' bucket
         const { data, error: uploadError } = await supabase.storage
           .from("images")
@@ -55,7 +63,7 @@ export function ImageUploader({
         onChange(publicUrl);
       } catch (err: any) {
         console.error("Upload failed:", err);
-        setError("画像のアップロードに失敗しました。");
+        setError(err.message || "画像のアップロードに失敗しました。");
       } finally {
         setIsUploading(false);
       }

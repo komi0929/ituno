@@ -38,6 +38,14 @@ export function ProfileEditor({
     setMessage(null);
 
     try {
+      // Check for missing configuration
+      const supabaseUrl = (supabase as any).supabaseUrl;
+      if (supabaseUrl && supabaseUrl.includes("placeholder.supabase.co")) {
+        throw new Error(
+          "データベース設定が不足しています。Vercelの環境変数を確認してください。",
+        );
+      }
+
       const profileData = {
         id: userId,
         username: formData.username,

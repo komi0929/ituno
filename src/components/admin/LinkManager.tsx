@@ -192,6 +192,14 @@ export function LinkManager({
   ) => {
     setIsAdding(true);
     try {
+      // Check for missing configuration
+      const supabaseUrl = (supabase as any).supabaseUrl;
+      if (supabaseUrl && supabaseUrl.includes("placeholder.supabase.co")) {
+        throw new Error(
+          "データベース設定が不足しています。Vercelの環境変数を確認してください。",
+        );
+      }
+
       // If custom URL provided, try to fetch metadata first
       let finalTitle = title;
       let finalIcon = iconUrl;
